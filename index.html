@@ -2,227 +2,140 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Community</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
+<title>Growth Trade Community</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<!-- Basic CSS -->
 <style>
-body{
-margin:0;
-font-family:Poppins,sans-serif;
-background:#0b0f19;
-color:#ffffff;
-}
-header{
-padding:14px;
-background:linear-gradient(135deg,#020617,#0f172a);
-display:flex;
-align-items:center;
-gap:12px;
-}
-header img{
-height:42px;
-}
-header h1{
-margin:0;
-font-size:18px;
-color:#38bdf8;
-}
-header span{
-font-size:12px;
-color:#cbd5f5;
-}
-section{
-padding:16px;
-display:none;
-}
-section.active{display:block;}
-.card{
-background:#111827;
-border-radius:16px;
-padding:16px;
-margin-bottom:16px;
-box-shadow:0 0 15px rgba(0,0,0,.6);
-}
-h2{
-color:#22d3ee;
-font-size:18px;
-margin-top:0;
-}
-nav{
-position:fixed;
-bottom:0;
-width:100%;
-background:#020617;
-display:flex;
-justify-content:space-around;
-padding:10px 0;
-}
-nav button{
-background:none;
-border:none;
-color:#94a3b8;
-font-size:14px;
-}
-nav button.active{
-color:#22d3ee;
-}
-footer{
-text-align:center;
-font-size:12px;
-color:#94a3b8;
-padding:10px;
-margin-bottom:60px;
-}
-.buttons{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:10px;
-}
-.btn{
-border:1px solid #22d3ee;
-background:#020617;
-color:#22d3ee;
-padding:8px 16px;
-border-radius:20px;
-cursor:pointer;
-}
-.btn:hover{
-background:#22d3ee;
-color:#020617;
-}
+  body {
+    margin:0; font-family: 'Roboto', sans-serif; background:#0d1117; color:#fff;
+  }
+  header {
+    display:flex; align-items:center; padding:10px 20px; background:#161b22; box-shadow:0 2px 5px rgba(0,0,0,0.5);
+  }
+  header img {
+    width:50px; height:50px; margin-right:15px;
+  }
+  header h1 {
+    font-size:22px; margin:0; color:#00e5ff;
+  }
+  nav {
+    display:flex; justify-content:center; background:#161b22; padding:10px 0; box-shadow:0 2px 5px rgba(0,0,0,0.5);
+  }
+  nav a {
+    color:#fff; text-decoration:none; margin:0 15px; font-weight:700; transition:0.3s;
+  }
+  nav a:hover {
+    color:#00e5ff;
+  }
+  section {
+    padding:20px;
+  }
+  h2 {
+    color:#00e5ff; margin-bottom:10px;
+  }
+  .telegram-btn {
+    display:inline-block; padding:10px 20px; background:#0088cc; color:#fff; text-decoration:none; border-radius:5px; margin-top:15px;
+    transition:0.3s;
+  }
+  .telegram-btn:hover {
+    background:#00c6ff;
+  }
+  /* TradingView widget container */
+  .tv-widget {
+    height:400px; max-width:100%; margin-bottom:20px;
+  }
 </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
+<!-- Header -->
 <header>
-<img src="logo.png" alt="Growth Trade Logo">
-<div>
-<h1>Growth Trade Community</h1>
-<span>Crypto • Live Charts • Market Data</span>
-</div>
+  <img src="logo.png" alt="Growth Trade Logo">
+  <h1>Growth Trade Community</h1>
 </header>
 
-<!-- HOME (CRYPTO MODE) -->
-<section id="home" class="active">
-
-<div class="card">
-<h2>💰 Live Crypto Prices</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
-{
-"symbols":[
-{"proName":"BINANCE:BTCUSDT","title":"Bitcoin"},
-{"proName":"BINANCE:ETHUSDT","title":"Ethereum"},
-{"proName":"BINANCE:SOLUSDT","title":"Solana"},
-{"proName":"BINANCE:XRPUSDT","title":"XRP"}
-],
-"colorTheme":"dark",
-"isTransparent":true,
-"displayMode":"adaptive",
-"locale":"en"
-}
-</script>
-</div>
-
-<div class="card">
-<h2>🔥 Crypto Market Overview</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-{
-"width":"100%",
-"height":400,
-"defaultColumn":"overview",
-"screener_type":"crypto_mkt",
-"colorTheme":"dark",
-"locale":"en"
-}
-</script>
-</div>
-
-</section>
-
-<!-- CHARTS -->
-<section id="charts">
-<div class="card">
-<h2>📈 Live Crypto Charts</h2>
-
-<div class="buttons">
-<button class="btn" onclick="loadChart('BINANCE:BTCUSDT')">BTC</button>
-<button class="btn" onclick="loadChart('BINANCE:ETHUSDT')">ETH</button>
-<button class="btn" onclick="loadChart('BINANCE:SOLUSDT')">SOL</button>
-<button class="btn" onclick="loadChart('BINANCE:XRPUSDT')">XRP</button>
-</div>
-
-<div id="tvchart" style="height:420px;"></div>
-</div>
-</section>
-
-<!-- NEWS -->
-<section id="news">
-<div class="card">
-<h2>📰 Live Crypto News</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js">
-{
-"colorTheme":"dark",
-"isTransparent":true,
-"displayMode":"regular",
-"width":"100%",
-"height":400,
-"locale":"en"
-}
-</script>
-</div>
-</section>
-
-<!-- TELEGRAM -->
-<section id="telegram">
-<div class="card">
-<h2>📨 Growth Trade Telegram</h2>
-<iframe src="https://t.me/s/growthtrade85"
-width="100%"
-height="420"
-style="border:none;border-radius:12px;">
-</iframe>
-</div>
-</section>
-
-<footer>
-Live Crypto Data via TradingView • Educational Purpose Only
-</footer>
-
-<!-- BOTTOM NAV -->
+<!-- Navigation -->
 <nav>
-<button class="active" onclick="openTab('home',this)">Home</button>
-<button onclick="openTab('charts',this)">Charts</button>
-<button onclick="openTab('news',this)">News</button>
-<button onclick="openTab('telegram',this)">Telegram</button>
+  <a href="#charts">Charts</a>
+  <a href="#prices">Live Prices</a>
+  <a href="#news">News</a>
+  <a href="https://t.me/growthtrade85" target="_blank">Telegram</a>
 </nav>
 
-<script src="https://s3.tradingview.com/tv.js"></script>
+<!-- Live Charts Section -->
+<section id="charts">
+  <h2>Live Forex & Crypto Charts</h2>
+  <div class="tv-widget" id="tv_chart"></div>
+</section>
+
+<!-- Live Prices Section -->
+<section id="prices">
+  <h2>Live Market Prices</h2>
+  <div id="market-prices"></div>
+</section>
+
+<!-- News Section -->
+<section id="news">
+  <h2>Latest Market News</h2>
+  <div id="news-feed"></div>
+</section>
+
+<!-- Telegram Button -->
+<section>
+  <a href="https://t.me/growthtrade85" target="_blank" class="telegram-btn">Join Our Telegram</a>
+</section>
+
+<!-- TradingView Widget Script -->
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script>
-function openTab(id,btn){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-}
-function loadChart(symbol){
-document.getElementById("tvchart").innerHTML="";
-new TradingView.widget({
-width:"100%",
-height:420,
-symbol:symbol,
-interval:"15",
-timezone:"Asia/Kolkata",
-theme:"dark",
-style:"1",
-container_id:"tvchart"
+  new TradingView.widget({
+    "width": "100%",
+    "height": 400,
+    "symbol": "FOREX:EURUSD",
+    "interval": "60",
+    "timezone": "Etc/UTC",
+    "theme": "dark",
+    "style": "1",
+    "locale": "en",
+    "toolbar_bg": "#161b22",
+    "enable_publishing": false,
+    "allow_symbol_change": true,
+    "container_id": "tv_chart"
+  });
+</script>
+
+<!-- Example Live Prices (You can replace with API later) -->
+<script>
+const prices = [
+  {symbol:"EUR/USD", price:"1.1012", change:"-0.12%"},
+  {symbol:"GBP/USD", price:"1.3378", change:"-0.02%"},
+  {symbol:"BTC/USDT", price:"95091.95", change:"-0.54%"}
+];
+const marketDiv = document.getElementById("market-prices");
+prices.forEach(p=>{
+  const div = document.createElement("div");
+  div.style.padding="10px 0";
+  div.innerHTML=`<strong>${p.symbol}</strong>: ${p.price} (<span style="color:red">${p.change}</span>)`;
+  marketDiv.appendChild(div);
 });
-}
-loadChart("BINANCE:BTCUSDT");
+</script>
+
+<!-- Example News Feed -->
+<script>
+const news = [
+  "Bitcoin rises above $95k amid market optimism.",
+  "EUR/USD shows slight downward trend.",
+  "Forex market opens steady for Asia session."
+];
+const newsDiv = document.getElementById("news-feed");
+news.forEach(n=>{
+  const div = document.createElement("div");
+  div.style.padding="5px 0";
+  div.textContent = n;
+  newsDiv.appendChild(div);
+});
 </script>
 
 </body>
