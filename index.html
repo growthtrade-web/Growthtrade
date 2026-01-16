@@ -7,65 +7,44 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-    margin:0;
-    font-family:Poppins,sans-serif;
-    background:#0b0f19;
-    color:#fff;
-}
-header{
-    padding:15px;
-    text-align:center;
-    background:linear-gradient(90deg,#020617,#111827);
-}
-header h1{margin:0;color:#38bdf8;}
-section{padding:15px;display:none;}
-section.active{display:block;}
+body{margin:0;font-family:Poppins,sans-serif;background:#0b0f19;color:#fff}
+header{padding:18px;text-align:center;background:linear-gradient(135deg,#020617,#0f172a)}
+header h1{margin:0;color:#38bdf8;font-size:24px}
+header p{margin:6px 0 0;color:#cbd5f5}
+section{padding:16px;display:none}
+section.active{display:block}
 .card{
-    background:#111827;
-    border-radius:14px;
-    padding:15px;
-    margin-bottom:15px;
-    box-shadow:0 0 12px rgba(0,0,0,.6);
+background:#111827;
+border-radius:16px;
+padding:16px;
+margin-bottom:16px;
+box-shadow:0 0 15px rgba(0,0,0,.6)
 }
-h2{color:#22d3ee;margin-top:0}
-.buttons{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    margin-bottom:10px;
-}
+h2{color:#22d3ee;margin-top:0;font-size:18px}
+.buttons{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
 .btn{
-    border:1px solid #22d3ee;
-    background:#020617;
-    color:#22d3ee;
-    padding:8px 16px;
-    border-radius:20px;
-    cursor:pointer;
+border:1px solid #22d3ee;
+background:#020617;
+color:#22d3ee;
+padding:8px 16px;
+border-radius:22px;
+cursor:pointer;
 }
 .btn:hover{background:#22d3ee;color:#020617}
 nav{
-    position:fixed;
-    bottom:0;
-    width:100%;
-    background:#020617;
-    display:flex;
-    justify-content:space-around;
-    padding:10px 0;
+position:fixed;bottom:0;width:100%;
+background:#020617;
+display:flex;justify-content:space-around;
+padding:10px 0
 }
 nav button{
-    background:none;
-    border:none;
-    color:#94a3b8;
-    font-size:14px;
+background:none;border:none;
+color:#94a3b8;font-size:14px
 }
 nav button.active{color:#22d3ee}
 footer{
-    text-align:center;
-    padding:10px;
-    font-size:12px;
-    color:#94a3b8;
-    margin-bottom:60px;
+text-align:center;font-size:12px;
+color:#94a3b8;padding:10px;margin-bottom:60px
 }
 </style>
 </head>
@@ -73,16 +52,15 @@ footer{
 <body>
 
 <header>
-<h1>📈 Live Forex & Crypto</h1>
-<p>Real Charts • Live Prices • Market News</p>
+<h1>📊 Live Forex & Crypto</h1>
+<p>Real Charts • Prices • Movers • News</p>
 </header>
 
 <!-- HOME -->
 <section id="home" class="active">
+
 <div class="card">
 <h2>💰 Live Market Prices</h2>
-<div class="tradingview-widget-container">
-<div class="tradingview-widget-container__widget"></div>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
 {
 "symbols":[
@@ -91,20 +69,29 @@ footer{
 {"proName":"BINANCE:BTCUSDT","title":"BTC/USDT"},
 {"proName":"BINANCE:ETHUSDT","title":"ETH/USDT"}
 ],
-"colorTheme":"dark",
-"isTransparent":true,
-"displayMode":"adaptive",
-"locale":"en"
+"colorTheme":"dark","isTransparent":true,"displayMode":"adaptive","locale":"en"
 }
 </script>
 </div>
+
+<div class="card">
+<h2>🔥 Crypto Market Overview</h2>
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+{
+"width":"100%","height":400,
+"defaultColumn":"overview",
+"screener_type":"crypto_mkt",
+"colorTheme":"dark","locale":"en"
+}
+</script>
 </div>
+
 </section>
 
 <!-- CHARTS -->
 <section id="charts">
 <div class="card">
-<h2>📊 Live Charts</h2>
+<h2>📈 Interactive Live Charts</h2>
 <div class="buttons">
 <button class="btn" onclick="loadChart('BINANCE:BTCUSDT')">BTC</button>
 <button class="btn" onclick="loadChart('BINANCE:ETHUSDT')">ETH</button>
@@ -119,19 +106,22 @@ footer{
 <section id="news">
 <div class="card">
 <h2>📰 Live Market News</h2>
-<div class="tradingview-widget-container">
-<div class="tradingview-widget-container__widget"></div>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js">
 {
-"colorTheme":"dark",
-"isTransparent":true,
-"displayMode":"regular",
-"width":"100%",
-"height":400,
-"locale":"en"
+"colorTheme":"dark","isTransparent":true,
+"displayMode":"regular","width":"100%","height":400,"locale":"en"
 }
 </script>
 </div>
+
+<div class="card">
+<h2>📅 Economic Calendar</h2>
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-events.js">
+{
+"colorTheme":"dark","isTransparent":true,
+"width":"100%","height":400,"locale":"en"
+}
+</script>
 </div>
 </section>
 
@@ -139,12 +129,12 @@ footer{
 <section id="telegram">
 <div class="card">
 <h2>📨 Live Telegram Updates</h2>
-<iframe src="https://t.me/s/TradingView" width="100%" height="400" style="border:none;border-radius:10px;"></iframe>
+<iframe src="https://t.me/s/growthtrade85" width="100%" height="420" style="border:none;border-radius:12px;"></iframe>
 </div>
 </section>
 
 <footer>
-Live Market Data via TradingView • Educational Purpose Only
+Real-Time Data via TradingView • Educational Purpose Only
 </footer>
 
 <nav>
@@ -165,13 +155,10 @@ btn.classList.add("active");
 function loadChart(symbol){
 document.getElementById("tvchart").innerHTML="";
 new TradingView.widget({
-width:"100%",
-height:420,
-symbol:symbol,
-interval:"15",
+width:"100%",height:420,
+symbol:symbol,interval:"15",
 timezone:"Asia/Kolkata",
-theme:"dark",
-style:"1",
+theme:"dark",style:"1",
 container_id:"tvchart"
 });
 }
