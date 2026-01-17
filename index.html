@@ -4,168 +4,187 @@
 <meta charset="UTF-8">
 <title>Growth Trade Community</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-body{margin:0;font-family:'Roboto',sans-serif;background:#0d1117;color:#fff;}
-header{padding:15px;text-align:center;background:linear-gradient(135deg,#020617,#161b22);box-shadow:0 3px 10px rgba(0,0,0,0.5);}
-header h1{margin:0;color:#00e5ff;font-size:22px;}
-nav{display:flex;justify-content:center;background:#161b22;padding:10px 0;box-shadow:0 -3px 10px rgba(0,0,0,0.5);position:fixed;bottom:0;width:100%;z-index:100;}
-nav button{background:none;border:none;color:#94a3b8;font-size:14px;margin:0 10px;font-weight:700;cursor:pointer;transition:0.3s;}
-nav button.active{color:#00e5ff;}
-section{padding:20px;display:none;}
-section.active{display:block;}
-.card{background:#111827;border-radius:15px;padding:15px;margin-bottom:20px;box-shadow:0 0 15px rgba(0,0,0,0.5);}
-h2{color:#00e5ff;margin-bottom:10px;}
-.btn{border:1px solid #00e5ff;color:#00e5ff;background:#161b22;padding:8px 18px;border-radius:22px;cursor:pointer;transition:0.3s;margin:5px;}
-.btn:hover{background:#00e5ff;color:#161b22;}
-table{width:100%;border-collapse:collapse;margin-top:10px;}
-th,td{padding:10px;text-align:left;}
-th{background:#161b22;color:#00e5ff;}
-td{background:#111827;}
-.green{color:#4ade80;}
-.red{color:#f87171;}
-iframe{border:none;border-radius:12px;width:100%;}
-/* Tooltip chart preview */
-.tooltip-chart{position:absolute;display:none;width:300px;height:200px;z-index:999;background:#161b22;border:1px solid #00e5ff;border-radius:10px;}
+:root{
+  --bg:#050b18;
+  --card:#0f172a;
+  --accent:#22c55e;
+  --accent2:#38bdf8;
+  --text:#e5e7eb;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(180deg,#020617,#050b18);
+  color:var(--text);
+}
+header{
+  padding:18px;
+  text-align:center;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  box-shadow:0 6px 25px rgba(0,0,0,.6);
+  position:sticky;
+  top:0;
+  z-index:999;
+}
+header h1{
+  margin:0;
+  font-size:24px;
+  font-weight:800;
+  color:var(--accent2);
+}
+section{padding:22px}
+.card{
+  background:var(--card);
+  border-radius:20px;
+  padding:18px;
+  margin-bottom:24px;
+  box-shadow:0 0 30px rgba(0,0,0,.6);
+}
+h2{
+  margin:0 0 14px;
+  font-size:18px;
+  color:var(--accent);
+}
+iframe{width:100%;border:none;border-radius:16px}
+footer{
+  text-align:center;
+  color:var(--muted);
+  padding:18px;
+  font-size:13px;
+  margin-bottom:70px;
+}
+
+/* Bottom Nav */
+nav{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#020617;
+  display:flex;
+  justify-content:space-around;
+  padding:12px 0;
+  box-shadow:0 -6px 20px rgba(0,0,0,.7);
+}
+nav button{
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-weight:600;
+  cursor:pointer;
+}
+nav button.active{color:var(--accent2)}
 </style>
 </head>
+
 <body>
 
 <header>
-<h1>Growth Trade Community</h1>
+  <h1>Growth Trade Community</h1>
 </header>
 
-<nav>
-<button class="active" onclick="openTab('home',this)">Home</button>
-<button onclick="openTab('charts',this)">Charts</button>
-<button onclick="openTab('prices',this)">Live Prices</button>
-<button onclick="openTab('news',this)">News</button>
-<button onclick="openTab('telegram',this)">Telegram</button>
-</nav>
-
-<!-- HOME -->
-<section id="home" class="active">
-<div class="card">
-<h2>🔥 Crypto Market Overview</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-{"width":"100%","height":400,"defaultColumn":"overview","screener_type":"crypto_mkt","colorTheme":"dark","locale":"en"}
-</script>
-</div>
+<!-- HOME : TOP 500 -->
+<section id="home" class="page">
+  <div class="card">
+    <h2>🚀 Top 500 Cryptocurrencies (Live)</h2>
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+    {
+      "width":"100%",
+      "height":600,
+      "defaultColumn":"overview",
+      "screener_type":"crypto_mkt",
+      "displayCurrency":"USD",
+      "colorTheme":"dark",
+      "locale":"en"
+    }
+    </script>
+  </div>
 </section>
 
 <!-- CHARTS -->
-<section id="charts">
-<div class="card">
-<h2>📈 Interactive Crypto Charts</h2>
-<div class="btn" onclick="loadChart('BINANCE:BTCUSDT')">BTC</div>
-<div class="btn" onclick="loadChart('BINANCE:ETHUSDT')">ETH</div>
-<div class="btn" onclick="loadChart('BINANCE:SOLUSDT')">SOL</div>
-<div class="btn" onclick="loadChart('BINANCE:XRPUSDT')">XRP</div>
-<div id="tvchart" style="height:420px;margin-top:10px;"></div>
-</div>
+<section id="charts" class="page" style="display:none">
+  <div class="card">
+    <h2>📈 Live Crypto Charts (Any Coin)</h2>
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
+    {
+      "autosize":true,
+      "symbol":"BINANCE:BTCUSDT",
+      "interval":"15",
+      "timezone":"Asia/Kolkata",
+      "theme":"dark",
+      "style":"1",
+      "locale":"en",
+      "allow_symbol_change":true
+    }
+    </script>
+  </div>
 </section>
 
-<!-- LIVE PRICES & HEATMAP -->
-<section id="prices">
-<div class="card">
-<h2>💰 Real-Time Crypto Prices & Top Gainers/Losers</h2>
-<table id="crypto-table">
-<tr><th>Symbol</th><th>Price (USDT)</th><th>Change(24h)</th></tr>
-</table>
-<div class="tooltip-chart" id="tooltipChart"></div>
-</div>
+<!-- GAINERS / LOSERS -->
+<section id="gainers" class="page" style="display:none">
+  <div class="card">
+    <h2>🔥 Top Gainers & Losers</h2>
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js">
+    {
+      "colorTheme":"dark",
+      "locale":"en",
+      "market":"crypto",
+      "height":420
+    }
+    </script>
+  </div>
 </section>
 
 <!-- NEWS -->
-<section id="news">
-<div class="card">
-<h2>📰 Live Crypto News</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js">
-{"colorTheme":"dark","isTransparent":true,"displayMode":"regular","width":"100%","height":400,"locale":"en"}
-</script>
-</div>
+<section id="news" class="page" style="display:none">
+  <div class="card">
+    <h2>📰 Live Crypto News</h2>
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js">
+    {
+      "colorTheme":"dark",
+      "isTransparent":true,
+      "displayMode":"regular",
+      "width":"100%",
+      "height":420,
+      "locale":"en"
+    }
+    </script>
+  </div>
 </section>
 
 <!-- TELEGRAM -->
-<section id="telegram">
-<div class="card">
-<h2>📨 Telegram Updates</h2>
-<iframe src="https://t.me/s/growthtrade85" height="420"></iframe>
-</div>
+<section id="telegram" class="page" style="display:none">
+  <div class="card">
+    <h2>📢 Telegram Community</h2>
+    <iframe src="https://t.me/s/growthtrade85" height="420"></iframe>
+  </div>
 </section>
 
-<footer style="text-align:center;padding:15px;color:#94a3b8;margin-bottom:60px;">
-Live Crypto Data via Binance & TradingView • Educational Purpose Only
+<footer>
+Live Crypto Data via TradingView • Educational Purpose Only
 </footer>
 
-<script src="https://s3.tradingview.com/tv.js"></script>
+<nav>
+  <button class="active" onclick="openPage('home',this)">Home</button>
+  <button onclick="openPage('charts',this)">Charts</button>
+  <button onclick="openPage('gainers',this)">Gainers</button>
+  <button onclick="openPage('news',this)">News</button>
+  <button onclick="openPage('telegram',this)">Telegram</button>
+</nav>
+
 <script>
-// Tab switching
-function openTab(id,btn){
-document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-btn.classList.add("active");
-}
-
-// TradingView chart
-function loadChart(symbol){
-document.getElementById("tvchart").innerHTML="";
-new TradingView.widget({
-width:"100%",
-height:420,
-symbol:symbol,
-interval:"15",
-timezone:"Asia/Kolkata",
-theme:"dark",
-style:"1",
-container_id:"tvchart"
-});
-}
-loadChart("BINANCE:BTCUSDT");
-
-// Real-time crypto prices + Gainers/Losers + Hover Chart Preview
-const symbols=["BTCUSDT","ETHUSDT","SOLUSDT","XRPUSDT","ADAUSDT","DOGEUSDT"];
-async function fetchPrices(){
-  const table=document.getElementById("crypto-table");
-  table.querySelectorAll("tr:not(:first-child)").forEach(r=>r.remove());
-  for(const s of symbols){
-    const res=await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${s}`);
-    const data=await res.json();
-    const change=parseFloat(data.priceChangePercent).toFixed(2);
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${data.symbol}</td><td>${parseFloat(data.lastPrice).toFixed(2)}</td><td class="${change>=0?'green':'red'}">${change}%</td>`;
-    // Hover mini chart
-    tr.onmouseover=()=>showTooltipChart(s,tr);
-    tr.onmouseout=()=>hideTooltipChart();
-    table.appendChild(tr);
-  }
-}
-fetchPrices();
-setInterval(fetchPrices,5000);
-
-// Tooltip chart preview
-function showTooltipChart(symbol,row){
-  const tooltip=document.getElementById("tooltipChart");
-  tooltip.style.display="block";
-  const rect=row.getBoundingClientRect();
-  tooltip.style.top=(rect.top+window.scrollY-210)+"px";
-  tooltip.style.left=(rect.left+window.scrollX)+"px";
-  tooltip.innerHTML="";
-  new TradingView.widget({
-    width:300,
-    height:200,
-    symbol:`BINANCE:${symbol}`,
-    interval:"15",
-    timezone:"Asia/Kolkata",
-    theme:"dark",
-    style:"1",
-    container_id:"tooltipChart"
-  });
-}
-function hideTooltipChart(){
-  document.getElementById("tooltipChart").style.display="none";
+function openPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById(id).style.display='block';
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
 </script>
+
 </body>
 </html>
