@@ -1,25 +1,23 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Growth Trade Community</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
 body{
 background:radial-gradient(circle at top,#020617,#000);
 color:#e5e7eb;
 min-height:100vh
 }
 header{
-padding:18px;
 text-align:center;
+padding:18px;
 font-size:26px;
-font-weight:800;
+font-weight:900;
 color:#38bdf8
 }
 .page{display:none;padding:14px}
@@ -27,16 +25,25 @@ color:#38bdf8
 .card{
 background:#020617;
 border-radius:18px;
-padding:14px;
+padding:16px;
 margin-bottom:20px;
-box-shadow:0 0 20px rgba(56,189,248,.15)
+box-shadow:0 0 25px rgba(56,189,248,.15)
 }
-h2{
-color:#22c55e;
-margin-bottom:10px;
-font-size:18px
+h2{color:#22c55e;margin-bottom:8px}
+p{color:#94a3b8;font-size:14px;margin-bottom:14px}
+
+.btn{
+display:block;
+padding:16px;
+border-radius:16px;
+background:linear-gradient(135deg,#22c55e,#38bdf8);
+color:#020617;
+font-weight:900;
+text-align:center;
+text-decoration:none;
+margin-top:12px
 }
-iframe{border-radius:14px}
+
 nav{
 position:fixed;
 bottom:0;
@@ -48,35 +55,17 @@ border-top:1px solid #0f172a
 nav button{
 flex:1;
 padding:12px;
-background:none;
 border:none;
+background:none;
 color:#94a3b8;
-font-weight:700;
-font-size:13px
+font-weight:800
 }
 nav button.active{color:#38bdf8}
 footer{
 text-align:center;
-padding:12px;
 font-size:11px;
 color:#64748b;
 margin-bottom:70px
-}
-.telegram{
-display:block;
-padding:14px;
-border-radius:16px;
-background:linear-gradient(135deg,#22c55e,#38bdf8);
-color:#020617;
-text-align:center;
-font-weight:900;
-text-decoration:none;
-margin-top:14px
-}
-.note{
-font-size:12px;
-color:#94a3b8;
-margin-bottom:8px
 }
 </style>
 </head>
@@ -103,30 +92,29 @@ margin-bottom:8px
 </div>
 </div>
 
-<!-- INDIA FUNDAMENTAL (TOP ~2500 STOCKS) -->
-<div id="india" class="page">
+<!-- MULTIBAGGER -->
+<div id="multi" class="page">
 <div class="card">
-<h2>🇮🇳 India Stocks – Fundamental Screener</h2>
-<div class="note">
-Low PE • High ROE • Low Debt (India market only)
-</div>
+<h2>🇮🇳 India Multibagger Screener</h2>
 
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-{
-  "width": "100%",
-  "height": 560,
-  "defaultColumn": "fundamental",
-  "screener_type": "stock",
-  "market": "india",
-  "colorTheme": "dark",
-  "locale": "en",
-  "filter": [
-    {"left":"price_earnings_ttm","operation":"less","right":18},
-    {"left":"return_on_equity","operation":"greater","right":18},
-    {"left":"debt_to_equity","operation":"less","right":1}
-  ]
-}
-</script>
+<p>
+📌 Criteria used:
+<br>• Low PE
+<br>• High ROE
+<br>• Low Debt
+<br>• India market only
+</p>
+
+<p>
+⚠️ Heavy screeners GitHub Pages par slow ho jate hain,  
+isliye **fast & real TradingView screener** new tab me open hota hai.
+</p>
+
+<a class="btn" target="_blank"
+href="https://www.tradingview.com/screener/?market=india&price_earnings_ttm=lt18&return_on_equity=gt18&debt_to_equity=lt1">
+🔍 Open Live Fundamental Screener
+</a>
+
 </div>
 </div>
 
@@ -146,7 +134,7 @@ Low PE • High ROE • Low Debt (India market only)
 }
 </script>
 
-<a class="telegram" href="https://t.me/growthtrade85" target="_blank">
+<a class="btn" href="https://t.me/growthtrade85" target="_blank">
 📢 Join Telegram Channel
 </a>
 </div>
@@ -156,10 +144,9 @@ Low PE • High ROE • Low Debt (India market only)
 Live data via TradingView • Educational purpose only
 </footer>
 
-<!-- BOTTOM NAV -->
 <nav>
 <button class="active" onclick="openPage('home',this)">Home</button>
-<button onclick="openPage('india',this)">Multibagger</button>
+<button onclick="openPage('multi',this)">Multibagger</button>
 <button onclick="openPage('charts',this)">Charts</button>
 </nav>
 
