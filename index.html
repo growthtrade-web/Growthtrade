@@ -3,78 +3,74 @@
 <head>
 <meta charset="UTF-8">
 <title>Growth Trade Community</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Inter,sans-serif}
 body{
 background:radial-gradient(circle at top,#020617,#000);
 color:#e5e7eb;
 min-height:100vh
 }
 header{
-padding:22px;
+padding:20px;
 text-align:center;
-font-size:28px;
+font-size:26px;
 font-weight:800;
-color:#38bdf8;
-box-shadow:0 6px 30px rgba(56,189,248,.25)
+color:#38bdf8
 }
-.page{display:none;padding:16px}
+.page{display:none;padding:14px}
 .page.active{display:block}
 .card{
 background:#020617;
-border-radius:20px;
-padding:18px;
-margin-bottom:22px;
-box-shadow:0 0 35px rgba(56,189,248,.18)
+border-radius:18px;
+padding:14px;
+margin-bottom:20px;
+box-shadow:0 0 25px rgba(56,189,248,.15)
 }
 h2{
 color:#22c55e;
-margin-bottom:16px;
-font-size:21px
+margin-bottom:12px;
+font-size:18px
 }
-iframe{border-radius:16px}
+iframe{border-radius:14px}
 nav{
 position:fixed;
 bottom:0;
 width:100%;
 display:flex;
 background:#020617;
-border-top:1px solid #0f172a;
-overflow-x:auto
+border-top:1px solid #0f172a
 }
 nav button{
 flex:1;
-padding:14px;
+padding:12px;
 background:none;
 border:none;
 color:#94a3b8;
 font-weight:700;
-font-size:13px;
-min-width:90px
+font-size:13px
 }
 nav button.active{color:#38bdf8}
-.telegram-btn{
-display:block;
-margin-top:18px;
-padding:16px;
-text-align:center;
-border-radius:18px;
-background:linear-gradient(135deg,#22c55e,#38bdf8);
-color:#020617;
-font-weight:900;
-text-decoration:none;
-font-size:16px
-}
 footer{
 text-align:center;
-padding:14px;
-font-size:12px;
+padding:12px;
+font-size:11px;
 color:#64748b;
-margin-bottom:80px
+margin-bottom:70px
+}
+.telegram{
+display:block;
+padding:14px;
+border-radius:16px;
+background:linear-gradient(135deg,#22c55e,#38bdf8);
+color:#020617;
+text-align:center;
+font-weight:900;
+text-decoration:none;
+margin-top:14px
 }
 </style>
 </head>
@@ -86,11 +82,11 @@ margin-bottom:80px
 <!-- HOME -->
 <div id="home" class="page active">
 <div class="card">
-<h2>🔥 Top 500 Cryptos – Live Market</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+<h2>🔥 Top 500 Crypto Market</h2>
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
 {
   "width":"100%",
-  "height":650,
+  "height":520,
   "defaultColumn":"overview",
   "screener_type":"crypto_mkt",
   "displayCurrency":"USD",
@@ -101,44 +97,30 @@ margin-bottom:80px
 </div>
 </div>
 
-<!-- INDIA STOCKS MULTIBAGGER SCREENER -->
+<!-- MULTIBAGGER INDIA (FAST VERSION) -->
 <div id="india" class="page">
 <div class="card">
-<h2>🇮🇳 India Stocks – Low PE + High ROE + Low Debt</h2>
+<h2>🇮🇳 India Multibagger Screener</h2>
+<p style="font-size:12px;color:#94a3b8;margin-bottom:8px">
+PE &lt; 15 • ROE &gt; 20% • Debt/Equity &lt; 1
+</p>
 
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
 {
   "width": "100%",
-  "height": 650,
+  "height": 520,
   "defaultColumn": "fundamental",
   "screener_type": "stock",
   "market": "india",
   "colorTheme": "dark",
   "locale": "en",
   "filter": [
-    {
-      "left": "price_earnings_ttm",
-      "operation": "less",
-      "right": 15
-    },
-    {
-      "left": "return_on_equity",
-      "operation": "greater",
-      "right": 20
-    },
-    {
-      "left": "debt_to_equity",
-      "operation": "less",
-      "right": 1
-    }
+    {"left":"price_earnings_ttm","operation":"less","right":15},
+    {"left":"return_on_equity","operation":"greater","right":20},
+    {"left":"debt_to_equity","operation":"less","right":1}
   ]
 }
 </script>
-
-<p style="font-size:12px;color:#94a3b8;margin-top:10px;text-align:center">
-Filters: PE &lt; 15 • ROE &gt; 20% • Debt/Equity &lt; 1
-</p>
-
 </div>
 </div>
 
@@ -146,20 +128,20 @@ Filters: PE &lt; 15 • ROE &gt; 20% • Debt/Equity &lt; 1
 <div id="charts" class="page">
 <div class="card">
 <h2>📈 Live Chart</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
 {
-  "width": "100%",
-  "height": 560,
-  "symbol": "NSE:RELIANCE",
-  "interval": "15",
-  "timezone": "Asia/Kolkata",
-  "theme": "dark",
-  "allow_symbol_change": true
+  "width":"100%",
+  "height":520,
+  "symbol":"NSE:NIFTY",
+  "interval":"15",
+  "timezone":"Asia/Kolkata",
+  "theme":"dark",
+  "allow_symbol_change":true
 }
 </script>
 
-<a class="telegram-btn" href="https://t.me/growthtrade85" target="_blank">
-📢 Join Telegram Channel
+<a class="telegram" href="https://t.me/growthtrade85" target="_blank">
+📢 Join Telegram
 </a>
 </div>
 </div>
@@ -168,38 +150,21 @@ Filters: PE &lt; 15 • ROE &gt; 20% • Debt/Equity &lt; 1
 <div id="news" class="page">
 <div class="card">
 <h2>📰 Live Crypto News</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-news.js">
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-news.js" async>
 {
   "feedMode":"crypto",
   "displayMode":"regular",
   "width":"100%",
-  "height":600,
+  "height":520,
   "colorTheme":"dark",
   "locale":"en"
 }
 </script>
 </div>
-
-<div class="card">
-<h2>📺 CNBC Crypto TV – LIVE</h2>
-<iframe width="100%" height="420"
-src="https://www.youtube.com/embed/9NyxcX3rhQs?mute=1"
-allowfullscreen></iframe>
-</div>
-</div>
-
-<!-- TELEGRAM -->
-<div id="telegram" class="page">
-<div class="card">
-<h2>📢 Growth Trade Telegram</h2>
-<a class="telegram-btn" href="https://t.me/growthtrade85" target="_blank">
-Open Telegram Channel
-</a>
-</div>
 </div>
 
 <footer>
-Live data via TradingView • Educational purpose only
+Live data via TradingView • Educational use only
 </footer>
 
 <nav>
@@ -207,7 +172,6 @@ Live data via TradingView • Educational purpose only
 <button onclick="openPage('india',this)">Multibagger</button>
 <button onclick="openPage('charts',this)">Charts</button>
 <button onclick="openPage('news',this)">News</button>
-<button onclick="openPage('telegram',this)">Telegram</button>
 </nav>
 
 <script>
