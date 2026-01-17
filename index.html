@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Community | Live Crypto</title>
+<title>Growth Trade Community</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
@@ -16,26 +16,37 @@ text-align:center;
 font-size:26px;
 font-weight:800;
 color:#38bdf8;
-background:linear-gradient(135deg,#020617,#020617);
 box-shadow:0 4px 20px rgba(56,189,248,.25)
 }
-section{padding:18px}
+.page{display:none;padding:16px}
+.page.active{display:block}
 .card{
 background:#020617;
-border-radius:16px;
-padding:18px;
-margin-bottom:22px;
-box-shadow:0 0 30px rgba(56,189,248,.12)
+border-radius:18px;
+padding:16px;
+margin-bottom:20px;
+box-shadow:0 0 30px rgba(56,189,248,.15)
 }
 h2{color:#22c55e;margin-bottom:14px;font-size:20px}
 iframe{border-radius:14px}
-footer{
-text-align:center;
-padding:14px;
-font-size:13px;
-color:#94a3b8
+nav{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+background:#020617;
+border-top:1px solid #0f172a
 }
-.btn{
+nav button{
+flex:1;
+padding:12px;
+background:none;
+border:none;
+color:#94a3b8;
+font-weight:700
+}
+nav button.active{color:#38bdf8}
+.telegram-btn{
 display:block;
 margin-top:16px;
 padding:14px;
@@ -44,8 +55,13 @@ border-radius:14px;
 background:linear-gradient(135deg,#22c55e,#38bdf8);
 color:#020617;
 font-weight:800;
-text-decoration:none;
-box-shadow:0 0 25px rgba(56,189,248,.6)
+text-decoration:none
+}
+footer{
+text-align:center;
+padding:12px;
+font-size:12px;
+color:#64748b
 }
 </style>
 </head>
@@ -54,10 +70,10 @@ box-shadow:0 0 25px rgba(56,189,248,.6)
 
 <header>🚀 Growth Trade Community</header>
 
-<!-- TOP 500 CRYPTO -->
-<section>
+<!-- HOME -->
+<div id="home" class="page active">
 <div class="card">
-<h2>🔥 Top 500 Cryptos – Live Prices</h2>
+<h2>🔥 Top 500 Cryptos (Live)</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
 {
   "width":"100%",
@@ -70,12 +86,12 @@ box-shadow:0 0 25px rgba(56,189,248,.6)
 }
 </script>
 </div>
-</section>
+</div>
 
-<!-- LIVE CHART -->
-<section>
+<!-- CHARTS -->
+<div id="charts" class="page">
 <div class="card">
-<h2>📈 Live Crypto Chart (Any Coin)</h2>
+<h2>📈 Live Crypto Chart (Big View)</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
 {
   "autosize": true,
@@ -89,53 +105,87 @@ box-shadow:0 0 25px rgba(56,189,248,.6)
 }
 </script>
 
-<a class="btn" href="https://t.me/growthtrade85" target="_blank">
-📢 Join Growth Trade Telegram Channel
+<a class="telegram-btn" href="https://t.me/growthtrade85" target="_blank">
+📢 Join Telegram Channel
 </a>
-
 </div>
-</section>
-
-<!-- CNBC CRYPTO TV LIVE -->
-<section>
-<div class="card">
-<h2>📺 CNBC Crypto TV – LIVE</h2>
-
-<iframe
-width="100%"
-height="420"
-src="https://www.youtube.com/embed/9NyxcX3rhQs?mute=1"
-allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-allowfullscreen>
-</iframe>
-
-<p style="font-size:12px;color:#64748b;text-align:center;margin-top:8px">
-Official CNBC Crypto TV Live Stream
-</p>
 </div>
-</section>
 
-<!-- LIVE NEWS -->
-<section>
+<!-- GAINERS / LOSERS -->
+<div id="gainers" class="page">
 <div class="card">
-<h2>📰 Live Crypto News (CNBC • Bloomberg • Reuters)</h2>
+<h2>🚀 Top Gainers & Losers (Top 500)</h2>
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js">
+{
+  "colorTheme":"dark",
+  "dateRange":"1D",
+  "exchange":"CRYPTO",
+  "showChart":true,
+  "locale":"en",
+  "width":"100%",
+  "height":600
+}
+</script>
+</div>
+</div>
+
+<!-- NEWS -->
+<div id="news" class="page">
+<div class="card">
+<h2>📰 Live Crypto News (CNBC • Bloomberg)</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-news.js">
 {
   "feedMode":"all_symbols",
-  "isTransparent":false,
   "displayMode":"regular",
   "width":"100%",
-  "height":550,
+  "height":600,
   "colorTheme":"dark",
   "locale":"en"
 }
 </script>
 </div>
-</section>
+
+<div class="card">
+<h2>📺 CNBC Crypto TV – LIVE</h2>
+<iframe
+width="100%"
+height="420"
+src="https://www.youtube.com/embed/9NyxcX3rhQs?mute=1"
+allowfullscreen>
+</iframe>
+</div>
+</div>
+
+<!-- TELEGRAM -->
+<div id="telegram" class="page">
+<div class="card">
+<h2>📢 Growth Trade Telegram</h2>
+<a class="telegram-btn" href="https://t.me/growthtrade85" target="_blank">
+Open Telegram Channel
+</a>
+</div>
+</div>
 
 <footer>
-Live market data & news powered by TradingView • CNBC Crypto TV
+Live data via TradingView • Educational purpose only
 </footer>
+
+<nav>
+<button class="active" onclick="openPage('home',this)">Home</button>
+<button onclick="openPage('charts',this)">Charts</button>
+<button onclick="openPage('gainers',this)">Gainers</button>
+<button onclick="openPage('news',this)">News</button>
+<button onclick="openPage('telegram',this)">Telegram</button>
+</nav>
+
+<script>
+function openPage(id,btn){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+}
+</script>
 
 </body>
 </html>
