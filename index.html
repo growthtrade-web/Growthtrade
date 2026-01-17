@@ -43,7 +43,8 @@ bottom:0;
 width:100%;
 display:flex;
 background:#020617;
-border-top:1px solid #0f172a
+border-top:1px solid #0f172a;
+overflow-x:auto
 }
 nav button{
 flex:1;
@@ -52,7 +53,8 @@ background:none;
 border:none;
 color:#94a3b8;
 font-weight:700;
-font-size:14px
+font-size:13px;
+min-width:90px
 }
 nav button.active{color:#38bdf8}
 .telegram-btn{
@@ -72,7 +74,7 @@ text-align:center;
 padding:14px;
 font-size:12px;
 color:#64748b;
-margin-bottom:70px
+margin-bottom:80px
 }
 </style>
 </head>
@@ -99,15 +101,56 @@ margin-bottom:70px
 </div>
 </div>
 
+<!-- INDIA STOCKS MULTIBAGGER SCREENER -->
+<div id="india" class="page">
+<div class="card">
+<h2>🇮🇳 India Stocks – Low PE + High ROE + Low Debt</h2>
+
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+{
+  "width": "100%",
+  "height": 650,
+  "defaultColumn": "fundamental",
+  "screener_type": "stock",
+  "market": "india",
+  "colorTheme": "dark",
+  "locale": "en",
+  "filter": [
+    {
+      "left": "price_earnings_ttm",
+      "operation": "less",
+      "right": 15
+    },
+    {
+      "left": "return_on_equity",
+      "operation": "greater",
+      "right": 20
+    },
+    {
+      "left": "debt_to_equity",
+      "operation": "less",
+      "right": 1
+    }
+  ]
+}
+</script>
+
+<p style="font-size:12px;color:#94a3b8;margin-top:10px;text-align:center">
+Filters: PE &lt; 15 • ROE &gt; 20% • Debt/Equity &lt; 1
+</p>
+
+</div>
+</div>
+
 <!-- CHARTS -->
 <div id="charts" class="page">
 <div class="card">
-<h2>📈 Live Crypto Chart (Big View)</h2>
+<h2>📈 Live Chart</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
 {
   "width": "100%",
   "height": 560,
-  "symbol": "BINANCE:BTCUSDT",
+  "symbol": "NSE:RELIANCE",
   "interval": "15",
   "timezone": "Asia/Kolkata",
   "theme": "dark",
@@ -118,24 +161,6 @@ margin-bottom:70px
 <a class="telegram-btn" href="https://t.me/growthtrade85" target="_blank">
 📢 Join Telegram Channel
 </a>
-</div>
-</div>
-
-<!-- GAINERS / LOSERS (CRYPTO ONLY) -->
-<div id="gainers" class="page">
-<div class="card">
-<h2>🚀 Top 500 Crypto Gainers & Losers (Live)</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-{
-  "width":"100%",
-  "height":650,
-  "defaultColumn":"performance",
-  "screener_type":"crypto_mkt",
-  "displayCurrency":"USD",
-  "colorTheme":"dark",
-  "locale":"en"
-}
-</script>
 </div>
 </div>
 
@@ -157,12 +182,9 @@ margin-bottom:70px
 
 <div class="card">
 <h2>📺 CNBC Crypto TV – LIVE</h2>
-<iframe
-width="100%"
-height="420"
+<iframe width="100%" height="420"
 src="https://www.youtube.com/embed/9NyxcX3rhQs?mute=1"
-allowfullscreen>
-</iframe>
+allowfullscreen></iframe>
 </div>
 </div>
 
@@ -177,13 +199,13 @@ Open Telegram Channel
 </div>
 
 <footer>
-Live crypto data via TradingView • Educational purpose only
+Live data via TradingView • Educational purpose only
 </footer>
 
 <nav>
 <button class="active" onclick="openPage('home',this)">Home</button>
+<button onclick="openPage('india',this)">Multibagger</button>
 <button onclick="openPage('charts',this)">Charts</button>
-<button onclick="openPage('gainers',this)">Gainers</button>
 <button onclick="openPage('news',this)">News</button>
 <button onclick="openPage('telegram',this)">Telegram</button>
 </nav>
