@@ -2,111 +2,157 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Dashboard</title>
+<title>Growth Trade – Crypto & Stocks</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#0b0f1a;
-  color:#fff;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0f1a;
+  color: #fff;
 }
-header{
-  text-align:center;
-  padding:15px;
-  font-size:20px;
-  font-weight:bold;
-  color:#00ff88;
+
+header {
+  padding: 12px;
+  text-align: center;
+  font-size: 20px;
+  color: #00ff88;
+  font-weight: bold;
 }
-.buttons{
-  display:flex;
-  justify-content:space-around;
-  background:#0f1629;
-  padding:10px;
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  background: #11162a;
+  padding: 8px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
-.buttons button{
-  background:#111a33;
-  border:none;
-  color:#fff;
-  padding:10px 12px;
-  border-radius:8px;
-  font-size:13px;
+
+nav button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 14px;
 }
-.buttons button.active{
-  background:#0066ff;
+
+nav button.active {
+  color: #00ff88;
 }
-.section{
-  display:none;
-  height:85vh;
+
+section {
+  display: none;
+  padding: 10px;
+  padding-bottom: 70px;
 }
-.section.active{
-  display:block;
+
+section.active {
+  display: block;
 }
-iframe{
-  width:100%;
-  height:100%;
-  border:none;
-}
-.telegram-box{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:85vh;
-}
-.telegram-box a{
-  background:#0088cc;
-  padding:15px 25px;
-  border-radius:10px;
-  color:white;
-  font-size:18px;
-  text-decoration:none;
+
+.widget-box {
+  height: 80vh;
 }
 </style>
 </head>
 
 <body>
 
-<header>📊 Growth Trade – Crypto & Stocks</header>
+<header>📊 Growth Trade Dashboard</header>
 
-<div class="buttons">
-  <button onclick="openTab('crypto')" class="active">Crypto</button>
-  <button onclick="openTab('stocks')">Stocks</button>
-  <button onclick="openTab('charts')">Charts</button>
-  <button onclick="openTab('telegram')">Telegram</button>
-</div>
+<!-- 1️⃣ CRYPTO FUNDAMENTALS -->
+<section id="cryptoFund" class="active">
+  <div class="widget-box">
+    <div class="tradingview-widget-container">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+      {
+        "width": "100%",
+        "height": "100%",
+        "defaultColumn": "overview",
+        "screener_type": "crypto_mkt",
+        "displayCurrency": "USD",
+        "colorTheme": "dark",
+        "locale": "en"
+      }
+      </script>
+    </div>
+  </div>
+</section>
 
-<!-- CRYPTO FUNDAMENTALS -->
-<div id="crypto" class="section active">
-<iframe src="https://www.tradingview.com/crypto-screener/"></iframe>
-</div>
+<!-- 2️⃣ STOCKS SCREENER -->
+<section id="stocks">
+  <div class="widget-box">
+    <div class="tradingview-widget-container">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+      {
+        "width": "100%",
+        "height": "100%",
+        "defaultColumn": "overview",
+        "screener_type": "stock",
+        "market": "india",
+        "colorTheme": "dark",
+        "locale": "en"
+      }
+      </script>
+    </div>
+  </div>
+</section>
 
-<!-- STOCK FUNDAMENTALS -->
-<div id="stocks" class="section">
-<iframe src="https://www.tradingview.com/screener/"></iframe>
-</div>
+<!-- 3️⃣ CRYPTO CHARTS -->
+<section id="charts">
+  <div class="widget-box">
+    <div id="tv_chart"></div>
+  </div>
+</section>
 
-<!-- CRYPTO CHARTS -->
-<div id="charts" class="section">
-<iframe src="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT"></iframe>
-</div>
+<!-- 4️⃣ TELEGRAM -->
+<section id="telegram">
+  <h2 style="text-align:center;color:#00ff88;">Join Our Telegram</h2>
+  <p style="text-align:center;">Live Trading • Crypto • Stocks</p>
 
-<!-- TELEGRAM -->
-<div id="telegram" class="section">
-  <div class="telegram-box">
-    <a href="https://t.me/growthtrade85" target="_blank">
-      🚀 Join Our Telegram Channel
+  <div style="text-align:center;margin-top:30px;">
+    <a href="https://t.me/growthtrade85" target="_blank"
+       style="padding:15px 25px;background:#00ff88;color:#000;
+              border-radius:8px;text-decoration:none;font-weight:bold;">
+      🚀 Open Telegram Channel
     </a>
   </div>
-</div>
+</section>
 
+<!-- BOTTOM NAV -->
+<nav>
+  <button class="active" onclick="openTab('cryptoFund', this)">Crypto</button>
+  <button onclick="openTab('stocks', this)">Stocks</button>
+  <button onclick="openTab('charts', this)">Charts</button>
+  <button onclick="openTab('telegram', this)">Telegram</button>
+</nav>
+
+<!-- CHART SCRIPT -->
+<script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-function openTab(tab){
-  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
-  document.querySelectorAll('.buttons button').forEach(b=>b.classList.remove('active'));
+function openTab(id, btn) {
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
 
-  document.getElementById(tab).classList.add('active');
-  event.target.classList.add('active');
+  if (id === "charts" && !window.chartLoaded) {
+    new TradingView.widget({
+      "container_id": "tv_chart",
+      "width": "100%",
+      "height": "100%",
+      "symbol": "BINANCE:BTCUSDT",
+      "interval": "15",
+      "timezone": "Asia/Kolkata",
+      "theme": "dark",
+      "style": "1",
+      "allow_symbol_change": true,
+      "hide_side_toolbar": false
+    });
+    window.chartLoaded = true;
+  }
 }
 </script>
 
