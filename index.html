@@ -2,162 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Community</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+<title>Crypto Charts</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Inter}
-body{
-background:radial-gradient(circle at top,#020617,#000);
-color:#e5e7eb;
-min-height:100vh
+body {
+  margin: 0;
+  background: #0b0f1a;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
-header{
-text-align:center;
-padding:18px;
-font-size:26px;
-font-weight:900;
-color:#38bdf8
+h2 {
+  text-align: center;
+  padding: 10px;
+  color: #00ff88;
 }
-.page{display:none;padding:14px}
-.page.active{display:block}
-.card{
-background:#020617;
-border-radius:18px;
-padding:16px;
-margin-bottom:20px;
-box-shadow:0 0 25px rgba(56,189,248,.15)
-}
-h2{color:#22c55e;margin-bottom:8px}
-p{color:#94a3b8;font-size:14px;margin-bottom:14px}
-
-.btn{
-display:block;
-padding:16px;
-border-radius:16px;
-background:linear-gradient(135deg,#22c55e,#38bdf8);
-color:#020617;
-font-weight:900;
-text-align:center;
-text-decoration:none;
-margin-top:12px
-}
-
-nav{
-position:fixed;
-bottom:0;
-width:100%;
-display:flex;
-background:#020617;
-border-top:1px solid #0f172a
-}
-nav button{
-flex:1;
-padding:12px;
-border:none;
-background:none;
-color:#94a3b8;
-font-weight:800
-}
-nav button.active{color:#38bdf8}
-footer{
-text-align:center;
-font-size:11px;
-color:#64748b;
-margin-bottom:70px
+.chart-box {
+  height: 85vh;
 }
 </style>
 </head>
 
 <body>
 
-<header>🚀 Growth Trade Community</header>
+<h2>Crypto Charts (Top Coins)</h2>
 
-<!-- HOME -->
-<div id="home" class="page active">
-<div class="card">
-<h2>🔥 Crypto Market Overview</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
-{
-  "width":"100%",
-  "height":520,
-  "defaultColumn":"overview",
-  "screener_type":"crypto_mkt",
-  "displayCurrency":"USD",
-  "colorTheme":"dark",
-  "locale":"en"
-}
-</script>
+<!-- TradingView Crypto Widget -->
+<div class="chart-box">
+  <div class="tradingview-widget-container">
+    <div id="tv_crypto"></div>
+
+    <script src="https://s3.tradingview.com/tv.js"></script>
+    <script>
+      new TradingView.widget({
+        "container_id": "tv_crypto",
+        "width": "100%",
+        "height": "100%",
+        "symbol": "BINANCE:BTCUSDT",
+        "interval": "15",
+        "timezone": "Asia/Kolkata",
+        "theme": "dark",
+        "style": "1",
+        "locale": "en",
+        "toolbar_bg": "#0b0f1a",
+        "enable_publishing": false,
+        "allow_symbol_change": true,
+        "hide_top_toolbar": false,
+        "save_image": false,
+        "studies": [],
+        "withdateranges": true
+      });
+    </script>
+  </div>
 </div>
-</div>
-
-<!-- MULTIBAGGER -->
-<div id="multi" class="page">
-<div class="card">
-<h2>🇮🇳 India Multibagger Screener</h2>
-
-<p>
-📌 Criteria used:
-<br>• Low PE
-<br>• High ROE
-<br>• Low Debt
-<br>• India market only
-</p>
-
-<p>
-⚠️ Heavy screeners GitHub Pages par slow ho jate hain,  
-isliye **fast & real TradingView screener** new tab me open hota hai.
-</p>
-
-<a class="btn" target="_blank"
-href="https://www.tradingview.com/screener/?market=india&price_earnings_ttm=lt18&return_on_equity=gt18&debt_to_equity=lt1">
-🔍 Open Live Fundamental Screener
-</a>
-
-</div>
-</div>
-
-<!-- CHARTS -->
-<div id="charts" class="page">
-<div class="card">
-<h2>📈 Live Chart</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-{
-  "width":"100%",
-  "height":560,
-  "symbol":"NSE:NIFTY",
-  "interval":"15",
-  "timezone":"Asia/Kolkata",
-  "theme":"dark",
-  "allow_symbol_change":true
-}
-</script>
-
-<a class="btn" href="https://t.me/growthtrade85" target="_blank">
-📢 Join Telegram Channel
-</a>
-</div>
-</div>
-
-<footer>
-Live data via TradingView • Educational purpose only
-</footer>
-
-<nav>
-<button class="active" onclick="openPage('home',this)">Home</button>
-<button onclick="openPage('multi',this)">Multibagger</button>
-<button onclick="openPage('charts',this)">Charts</button>
-</nav>
-
-<script>
-function openPage(id,btn){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-document.getElementById(id).classList.add('active');
-document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-btn.classList.add('active');
-}
-</script>
 
 </body>
 </html>
