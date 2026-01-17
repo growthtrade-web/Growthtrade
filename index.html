@@ -84,7 +84,7 @@ margin-bottom:70px
 <!-- HOME -->
 <div id="home" class="page active">
 <div class="card">
-<h2>🔥 Top 500 Cryptos (Live Market)</h2>
+<h2>🔥 Top 500 Cryptos – Live Market</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
 {
   "width":"100%",
@@ -102,7 +102,7 @@ margin-bottom:70px
 <!-- CHARTS -->
 <div id="charts" class="page">
 <div class="card">
-<h2>📈 Live Crypto Chart (Extra Big View)</h2>
+<h2>📈 Live Crypto Chart (Big View)</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js">
 {
   "width": "100%",
@@ -111,8 +111,6 @@ margin-bottom:70px
   "interval": "15",
   "timezone": "Asia/Kolkata",
   "theme": "dark",
-  "style": "1",
-  "locale": "en",
   "allow_symbol_change": true
 }
 </script>
@@ -123,20 +121,19 @@ margin-bottom:70px
 </div>
 </div>
 
-<!-- GAINERS / LOSERS -->
+<!-- GAINERS / LOSERS (CRYPTO ONLY) -->
 <div id="gainers" class="page">
 <div class="card">
-<h2>🚀 Top 500 Crypto Gainers & Losers</h2>
-<script src="https://s3.tradingview.com/external-embedding/embed-widget-hotlists.js">
+<h2>🚀 Top 500 Crypto Gainers & Losers (Live)</h2>
+<script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
 {
-  "colorTheme":"dark",
-  "dateRange":"1D",
-  "exchange":"CRYPTO",
-  "market":"crypto",
-  "showChart":true,
-  "locale":"en",
   "width":"100%",
-  "height":650
+  "height":650,
+  "defaultColumn":"performance",
+  "screener_type":"crypto_mkt",
+  "displayCurrency":"USD",
+  "colorTheme":"dark",
+  "locale":"en"
 }
 </script>
 </div>
@@ -148,7 +145,7 @@ margin-bottom:70px
 <h2>📰 Live Crypto News</h2>
 <script src="https://s3.tradingview.com/external-embedding/embed-widget-news.js">
 {
-  "feedMode":"all_symbols",
+  "feedMode":"crypto",
   "displayMode":"regular",
   "width":"100%",
   "height":600,
