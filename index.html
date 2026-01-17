@@ -2,59 +2,113 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Crypto Charts</title>
+<title>Growth Trade Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
-  margin: 0;
-  background: #0b0f1a;
-  color: #fff;
-  font-family: Arial, sans-serif;
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#0b0f1a;
+  color:#fff;
 }
-h2 {
-  text-align: center;
-  padding: 10px;
-  color: #00ff88;
+header{
+  text-align:center;
+  padding:15px;
+  font-size:20px;
+  font-weight:bold;
+  color:#00ff88;
 }
-.chart-box {
-  height: 85vh;
+.buttons{
+  display:flex;
+  justify-content:space-around;
+  background:#0f1629;
+  padding:10px;
+}
+.buttons button{
+  background:#111a33;
+  border:none;
+  color:#fff;
+  padding:10px 12px;
+  border-radius:8px;
+  font-size:13px;
+}
+.buttons button.active{
+  background:#0066ff;
+}
+.section{
+  display:none;
+  height:85vh;
+}
+.section.active{
+  display:block;
+}
+iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+.telegram-box{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:85vh;
+}
+.telegram-box a{
+  background:#0088cc;
+  padding:15px 25px;
+  border-radius:10px;
+  color:white;
+  font-size:18px;
+  text-decoration:none;
 }
 </style>
 </head>
 
 <body>
 
-<h2>Crypto Charts (Top Coins)</h2>
+<header>📊 Growth Trade – Crypto & Stocks</header>
 
-<!-- TradingView Crypto Widget -->
-<div class="chart-box">
-  <div class="tradingview-widget-container">
-    <div id="tv_crypto"></div>
+<div class="buttons">
+  <button onclick="openTab('crypto')" class="active">Crypto</button>
+  <button onclick="openTab('stocks')">Stocks</button>
+  <button onclick="openTab('charts')">Charts</button>
+  <button onclick="openTab('telegram')">Telegram</button>
+</div>
 
-    <script src="https://s3.tradingview.com/tv.js"></script>
-    <script>
-      new TradingView.widget({
-        "container_id": "tv_crypto",
-        "width": "100%",
-        "height": "100%",
-        "symbol": "BINANCE:BTCUSDT",
-        "interval": "15",
-        "timezone": "Asia/Kolkata",
-        "theme": "dark",
-        "style": "1",
-        "locale": "en",
-        "toolbar_bg": "#0b0f1a",
-        "enable_publishing": false,
-        "allow_symbol_change": true,
-        "hide_top_toolbar": false,
-        "save_image": false,
-        "studies": [],
-        "withdateranges": true
-      });
-    </script>
+<!-- CRYPTO FUNDAMENTALS -->
+<div id="crypto" class="section active">
+<iframe src="https://www.tradingview.com/crypto-screener/"></iframe>
+</div>
+
+<!-- STOCK FUNDAMENTALS -->
+<div id="stocks" class="section">
+<iframe src="https://www.tradingview.com/screener/"></iframe>
+</div>
+
+<!-- CRYPTO CHARTS -->
+<div id="charts" class="section">
+<iframe src="https://www.tradingview.com/chart/?symbol=BINANCE:BTCUSDT"></iframe>
+</div>
+
+<!-- TELEGRAM -->
+<div id="telegram" class="section">
+  <div class="telegram-box">
+    <a href="https://t.me/growthtrade85" target="_blank">
+      🚀 Join Our Telegram Channel
+    </a>
   </div>
 </div>
+
+<script>
+function openTab(tab){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.buttons button').forEach(b=>b.classList.remove('active'));
+
+  document.getElementById(tab).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
 
 </body>
 </html>
