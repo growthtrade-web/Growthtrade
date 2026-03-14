@@ -16,13 +16,13 @@
   html, body {
     margin: 0; padding: 0; height: 100%;
     background: var(--bg-dark);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     color: #fff;
     overflow: hidden;
   }
 
   header {
-    height: 48px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -33,25 +33,27 @@
     border-bottom: 1px solid #1e222d;
   }
 
-  /* TICKER HEIGHT FIX: 40px se 55px kar diya taaki data pura dikhe */
+  /* TICKER FIX: 72px space di hai taaki bada data aur icons fit ho jayein */
   .ticker-container {
-    height: 55px; 
+    height: 72px; 
     background: #131722;
     overflow: hidden;
     border-bottom: 1px solid #2a2e39;
+    display: block;
   }
 
   section {
     display: none;
-    /* Height calculation: Header(48) + Ticker(55) + Nav(60) = 163px approx */
-    height: calc(100vh - 163px);
+    /* Header(50) + Ticker(72) + Nav(60) = 182px gap */
+    height: calc(100vh - 182px);
+    width: 100%;
   }
 
   section.active { display: block; }
 
   .widget-full { width: 100%; height: 100%; }
 
-  /* Navigation Bar */
+  /* Navigation Bar Styling */
   nav {
     height: 60px;
     background: var(--nav-bg);
@@ -63,7 +65,7 @@
     width: 100%;
     padding-bottom: env(safe-area-inset-bottom);
     border-top: 1px solid #2a2e39;
-    z-index: 10;
+    z-index: 999;
   }
 
   nav button {
@@ -72,17 +74,15 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 12px;
-    font-weight: 600;
-    transition: 0.3s;
-    cursor: pointer;
+    font-size: 11px;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    transition: 0.2s;
   }
 
   nav button.active {
     color: var(--accent);
-    background: rgba(0, 255, 136, 0.05);
+    background: rgba(0, 255, 136, 0.08);
     border-top: 3px solid var(--accent);
   }
 </style>
@@ -98,8 +98,8 @@
     "symbols": [
       {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
       {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
-      {"proName": "NSE:NIFTY", "title": "NIFTY 50"},
-      {"proName": "NSE:BANKNIFTY", "title": "BANK NIFTY"},
+      {"proName": "NSE:NIFTY", "title": "NIFTY"},
+      {"proName": "NSE:BANKNIFTY", "title": "BANKNIFTY"},
       {"proName": "BINANCE:SOLUSDT", "title": "SOL"}
     ],
     "showSymbolLogo": true,
@@ -139,7 +139,7 @@
   <div id="tv_chart" class="widget-full"></div>
 </section>
 
-<nav id="bottom-nav">
+<nav>
   <button class="active" onclick="openTab('crypto', this)">Crypto</button>
   <button onclick="openTab('stocks', this)">Stocks</button>
   <button onclick="openTab('charts', this)">Charts</button>
@@ -150,16 +150,16 @@
 let chartLoaded = false;
 
 function openTab(id, btn) {
-  // Hide all sections
+  // Sabhi sections chhupao
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  // Deactivate all buttons
+  // Buttons ko reset karo
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
 
-  // Show selected section and activate button
+  // Select kiya gaya tab dikhao
   document.getElementById(id).classList.add("active");
   btn.classList.add("active");
 
-  // Load chart only once when needed
+  // Chart loading logic
   if (id === "charts") {
     if (!chartLoaded) {
       new TradingView.widget({
@@ -173,15 +173,12 @@ function openTab(id, btn) {
         "locale": "en",
         "toolbar_bg": "#f1f3f6",
         "enable_publishing": false,
-        "hide_side_toolbar": false,
         "allow_symbol_change": true,
-        "details": true,
-        "hotlist": true,
-        "calendar": true
+        "details": true
       });
       chartLoaded = true;
     } else {
-      // Fix for chart rendering on tab switch
+      // Resize fix
       window.dispatchEvent(new Event('resize'));
     }
   }
