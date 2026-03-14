@@ -33,20 +33,25 @@
     border-bottom: 1px solid #1e222d;
   }
 
+  /* TICKER HEIGHT FIX: 40px se 55px kar diya taaki data pura dikhe */
   .ticker-container {
-    height: 40px;
+    height: 55px; 
     background: #131722;
+    overflow: hidden;
+    border-bottom: 1px solid #2a2e39;
   }
 
   section {
     display: none;
-    height: calc(100vh - 148px);
+    /* Height calculation: Header(48) + Ticker(55) + Nav(60) = 163px approx */
+    height: calc(100vh - 163px);
   }
 
   section.active { display: block; }
 
   .widget-full { width: 100%; height: 100%; }
 
+  /* Navigation Bar */
   nav {
     height: 60px;
     background: var(--nav-bg);
@@ -58,6 +63,7 @@
     width: 100%;
     padding-bottom: env(safe-area-inset-bottom);
     border-top: 1px solid #2a2e39;
+    z-index: 10;
   }
 
   nav button {
@@ -77,7 +83,7 @@
   nav button.active {
     color: var(--accent);
     background: rgba(0, 255, 136, 0.05);
-    border-top: 2px solid var(--accent);
+    border-top: 3px solid var(--accent);
   }
 </style>
 </head>
@@ -93,8 +99,10 @@
       {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
       {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
       {"proName": "NSE:NIFTY", "title": "NIFTY 50"},
-      {"proName": "NSE:BANKNIFTY", "title": "BANK NIFTY"}
+      {"proName": "NSE:BANKNIFTY", "title": "BANK NIFTY"},
+      {"proName": "BINANCE:SOLUSDT", "title": "SOL"}
     ],
+    "showSymbolLogo": true,
     "colorTheme": "dark",
     "isTransparent": true,
     "displayMode": "adaptive",
@@ -142,12 +150,16 @@
 let chartLoaded = false;
 
 function openTab(id, btn) {
+  // Hide all sections
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  // Deactivate all buttons
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
 
+  // Show selected section and activate button
   document.getElementById(id).classList.add("active");
   btn.classList.add("active");
 
+  // Load chart only once when needed
   if (id === "charts") {
     if (!chartLoaded) {
       new TradingView.widget({
@@ -158,17 +170,18 @@ function openTab(id, btn) {
         "timezone": "Asia/Kolkata",
         "theme": "dark",
         "style": "1",
+        "locale": "en",
         "toolbar_bg": "#f1f3f6",
         "enable_publishing": false,
         "hide_side_toolbar": false,
         "allow_symbol_change": true,
         "details": true,
         "hotlist": true,
-        "calendar": true,
-        "locale": "en"
+        "calendar": true
       });
       chartLoaded = true;
     } else {
+      // Fix for chart rendering on tab switch
       window.dispatchEvent(new Event('resize'));
     }
   }
