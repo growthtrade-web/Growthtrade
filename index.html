@@ -2,70 +2,108 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Dashboard</title>
+<title>Growth Trade App</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <style>
+  /* 1. Global & Color Variables */
   :root {
-    --bg-dark: #0b0f1a;
-    --nav-bg: #0e1426;
-    --accent: #00ff88;
-    --text-dim: #8f929d;
+    --bg-pure: #0b0f1a;
+    --bg-panel: #0e1426;
+    --bg-ticker: #131722;
+    --nav-border: #2a2e39;
+    --accent: #00ff88; /* Bright Neon Green */
+    --text-dim: #9ea3ae;
+    --header-height: 54px;
+    --ticker-height: 70px;
+    --nav-height: 60px;
   }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   html, body {
-    margin: 0; padding: 0; height: 100%;
-    background: var(--bg-dark);
-    font-family: 'Segoe UI', Arial, sans-serif;
+    height: 100%;
+    background-color: var(--bg-pure);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     color: #fff;
-    overflow: hidden;
+    overflow: hidden; /* Prevent ugly browser scrollbars */
   }
 
+  /* 2. Main App Container (Using Flexbox to stack elements properly without overlaps) */
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+  }
+
+  /* 3. Colorful Header (Cleaned as requested) */
   header {
-    height: 50px;
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--nav-bg);
-    color: var(--accent);
-    font-size: 18px;
-    font-weight: bold;
-    border-bottom: 1px solid #1e222d;
+    background-color: var(--bg-panel);
+    border-bottom: 2px solid var(--bg-pure); /* Subtle depth */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    z-index: 100;
   }
 
-  /* TICKER FIX: 72px space di hai taaki bada data aur icons fit ho jayein */
+  header span {
+    color: var(--accent); /* Text itself is green */
+    font-size: 20px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* 4. Ticker Tape (Clean Responsive Height) */
   .ticker-container {
-    height: 72px; 
-    background: #131722;
-    overflow: hidden;
-    border-bottom: 1px solid #2a2e39;
+    height: var(--ticker-height);
+    background-color: var(--bg-ticker);
+    border-bottom: 1px solid var(--nav-border);
+    flex-shrink: 0; /* Important: Don't let this compress */
     display: block;
+    overflow: hidden;
+  }
+
+  /* 5. Main Content Area (Remaining Space) */
+  main {
+    flex-grow: 1; /* Takes ALL remaining vertical space */
+    position: relative;
+    overflow: hidden;
+    padding-bottom: 2px; /* Small gap for nav border */
   }
 
   section {
-    display: none;
-    /* Header(50) + Ticker(72) + Nav(60) = 182px gap */
-    height: calc(100vh - 182px);
-    width: 100%;
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
   }
 
-  section.active { display: block; }
+  section.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
   .widget-full { width: 100%; height: 100%; }
 
-  /* Navigation Bar Styling */
+  /* 6. Colorful Navigation (Premium Look) */
   nav {
-    height: 60px;
-    background: var(--nav-bg);
+    height: calc(var(--nav-height) + env(safe-area-inset-bottom));
+    background-color: var(--bg-panel);
+    border-top: 1px solid var(--nav-border);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     padding-bottom: env(safe-area-inset-bottom);
-    border-top: 1px solid #2a2e39;
-    z-index: 999;
+    flex-shrink: 0; /* Prevent compression */
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
   }
 
   nav button {
@@ -74,15 +112,19 @@
     background: none;
     border: none;
     color: var(--text-dim);
-    font-size: 11px;
-    font-weight: bold;
+    font-size: 13px;
+    font-weight: 600;
     text-transform: uppercase;
-    transition: 0.2s;
+    transition: all 0.2s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   nav button.active {
     color: var(--accent);
-    background: rgba(0, 255, 136, 0.08);
+    background-color: rgba(0, 255, 136, 0.08); /* Transparent green glow */
     border-top: 3px solid var(--accent);
   }
 </style>
@@ -90,76 +132,84 @@
 
 <body>
 
-<header>📊 Growth Trade Terminal</header>
+<div class="app-container">
 
-<div class="ticker-container">
-  <script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
-  {
-    "symbols": [
-      {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
-      {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
-      {"proName": "NSE:NIFTY", "title": "NIFTY"},
-      {"proName": "NSE:BANKNIFTY", "title": "BANKNIFTY"},
-      {"proName": "BINANCE:SOLUSDT", "title": "SOL"}
-    ],
-    "showSymbolLogo": true,
-    "colorTheme": "dark",
-    "isTransparent": true,
-    "displayMode": "adaptive",
-    "locale": "en"
-  }
-  </script>
+  <header>
+    <span>📈 GROWTH TRADE</span>
+  </header>
+
+  <div class="ticker-container">
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
+    {
+      "symbols": [
+        {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
+        {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
+        {"proName": "NSE:NIFTY", "title": "NIFTY"},
+        {"proName": "NSE:BANKNIFTY", "title": "BANKNIFTY"},
+        {"proName": "BINANCE:SOLUSDT", "title": "SOL"}
+      ],
+      "showSymbolLogo": true,
+      "colorTheme": "dark",
+      "isTransparent": true,
+      "displayMode": "adaptive",
+      "locale": "en"
+    }
+    </script>
+  </div>
+
+  <main>
+    <section id="crypto" class="active">
+      <div class="widget-full">
+        <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+        {
+          "width": "100%", "height": "100%", "defaultColumn": "overview",
+          "screener_type": "crypto_mkt", "displayCurrency": "USD",
+          "colorTheme": "dark", "locale": "en"
+        }
+        </script>
+      </div>
+    </section>
+
+    <section id="stocks">
+      <div class="widget-full">
+        <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
+        {
+          "width": "100%", "height": "100%", "defaultColumn": "overview",
+          "screener_type": "stock", "market": "india",
+          "colorTheme": "dark", "locale": "en"
+        }
+        </script>
+      </div>
+    </section>
+
+    <section id="charts">
+      <div id="tv_chart" class="widget-full"></div>
+    </section>
+  </main>
+
+  <nav>
+    <button class="active" onclick="openTab('crypto', this)">Crypto</button>
+    <button onclick="openTab('stocks', this)">Stocks</button>
+    <button onclick="openTab('charts', this)">Charts</button>
+  </nav>
+
 </div>
-
-<section id="crypto" class="active">
-  <div class="widget-full">
-    <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-    {
-      "width": "100%", "height": "100%", "defaultColumn": "overview",
-      "screener_type": "crypto_mkt", "displayCurrency": "USD",
-      "colorTheme": "dark", "locale": "en"
-    }
-    </script>
-  </div>
-</section>
-
-<section id="stocks">
-  <div class="widget-full">
-    <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-    {
-      "width": "100%", "height": "100%", "defaultColumn": "overview",
-      "screener_type": "stock", "market": "india",
-      "colorTheme": "dark", "locale": "en"
-    }
-    </script>
-  </div>
-</section>
-
-<section id="charts">
-  <div id="tv_chart" class="widget-full"></div>
-</section>
-
-<nav>
-  <button class="active" onclick="openTab('crypto', this)">Crypto</button>
-  <button onclick="openTab('stocks', this)">Stocks</button>
-  <button onclick="openTab('charts', this)">Charts</button>
-</nav>
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
 let chartLoaded = false;
 
 function openTab(id, btn) {
-  // Sabhi sections chhupao
+  // 1. Fade out all sections
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  // Buttons ko reset karo
+  // 2. Reset nav buttons
   document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
 
-  // Select kiya gaya tab dikhao
+  // 3. Activate current tab
   document.getElementById(id).classList.add("active");
   btn.classList.add("active");
 
-  // Chart loading logic
+  // 4. Chart load logic (Responsive fix)
   if (id === "charts") {
     if (!chartLoaded) {
       new TradingView.widget({
@@ -174,12 +224,17 @@ function openTab(id, btn) {
         "toolbar_bg": "#f1f3f6",
         "enable_publishing": false,
         "allow_symbol_change": true,
-        "details": true
+        "details": true,
+        "studies": [
+          "RSI@tv-basicstudies"
+        ]
       });
       chartLoaded = true;
     } else {
-      // Resize fix
-      window.dispatchEvent(new Event('resize'));
+      // Force chart container to recalculate layout
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+      }, 50); // Small delay to ensure CSS opacity has completed
     }
   }
 }
