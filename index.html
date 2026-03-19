@@ -9,8 +9,8 @@
     --bg-gradient: linear-gradient(160deg, #0f0c29 0%, #302b63 100%);
     --neon: #00ff88;
     --card-bg: rgba(10, 14, 26, 0.95);
-    --header-h: 60px;
-    --nav-h: 75px; /* Thoda bada navigation height */
+    --header-h: 65px;
+    --nav-h: 85px; /* Button ko upar dikhane ke liye height badhayi */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,7 +29,7 @@
     height: 100vh;
   }
 
-  /* 1. Colorful Header (Glow Effect) */
+  /* 1. Header with Glow */
   header {
     height: var(--header-h);
     display: flex;
@@ -49,17 +49,17 @@
     text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
   }
 
-  /* 2. Main Content Area (Full Screen minus Header & Nav) */
+  /* 2. Main Content Area */
   main {
     flex: 1;
     position: relative;
-    padding: 10px;
+    padding: 12px;
     overflow: hidden;
   }
 
   .content-view {
     position: absolute;
-    top: 5px; left: 10px; right: 10px; bottom: 5px;
+    top: 5px; left: 12px; right: 12px; bottom: 5px;
     background: var(--card-bg);
     border-radius: 20px;
     border: 1px solid rgba(0, 255, 136, 0.2);
@@ -70,36 +70,35 @@
 
   .content-view.active { display: block; }
 
-  /* 3. Improved Navigation (Shifted Upwards) */
+  /* 3. Navigation Bar (FIXED POSITION) */
   nav {
     height: var(--nav-h);
     background: #000;
     display: flex;
-    /* Bottom padding ko adjust kiya taaki button kute nahi */
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    justify-content: space-around;
+    align-items: flex-start; /* Buttons ko upar ki taraf rakha hai */
+    padding-top: 10px; /* Top se thoda gap */
+    padding-bottom: env(safe-area-inset-bottom); /* iPhone/Android notch support */
     border-top: 1px solid #333;
-    z-index: 100;
+    z-index: 1000;
   }
 
   nav button {
     flex: 1;
+    height: 50px; /* Fixed height for clickability */
     background: none;
     border: none;
     color: #888;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 14px; /* Text thoda bada kiya */
     text-transform: uppercase;
     transition: 0.3s;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 
   nav button.active {
     color: var(--neon);
-    background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent);
+    background: linear-gradient(to top, rgba(0, 255, 136, 0.15), transparent);
     border-top: 4px solid var(--neon);
     text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
   }
@@ -152,15 +151,12 @@
 let chartInit = false;
 
 function switchTab(id, btn) {
-  // Hide all
   document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   
-  // Show target
   document.getElementById(id).classList.add('active');
   btn.classList.add('active');
 
-  // Chart logic
   if (id === 'charts' && !chartInit) {
     new TradingView.widget({
       "autosize": true,
@@ -177,7 +173,6 @@ function switchTab(id, btn) {
     });
     chartInit = true;
   } else if (id === 'charts') {
-    // Refresh layout for responsive charts
     setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);
   }
 }
