@@ -6,102 +6,95 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <style>
   :root {
-    --bg-main: #0a0e17;
+    --bg: #05070a;
     --neon: #00ff88;
-    --glow: rgba(0, 255, 136, 0.4);
     --header-h: 60px;
-    --nav-h: 75px;
+    --nav-h: 70px;
   }
 
-  /* 1. FIX: Background kabhi nahi katega */
+  /* FIX: Full Screen without Scroll Bugs */
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
   html, body {
     height: 100%;
     width: 100%;
-    background: radial-gradient(circle at top, #1a1a2e 0%, #0a0e17 100%) no-repeat fixed;
+    background: radial-gradient(circle at top, #1a1a2e 0%, #05070a 100%) no-repeat fixed;
     font-family: 'Segoe UI', sans-serif;
     color: white;
-    overflow: hidden; /* Main body scroll nahi hogi */
+    overflow: hidden; /* Body scroll disable kiya bugs rokne ke liye */
   }
 
   .app-shell {
     display: flex;
     flex-direction: column;
-    height: 100dvh; /* Dynamic Viewport Height for mobile */
+    height: 100dvh; /* Dynamic Height for Mobile Browser Bars */
     width: 100%;
   }
 
-  /* 2. FIX: Header fix rahega */
   header {
     height: var(--header-h);
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.8);
     border-bottom: 2px solid var(--neon);
-    box-shadow: 0 4px 20px var(--glow);
     z-index: 100;
   }
 
   header h1 {
     font-size: 20px;
-    font-weight: 800;
     color: var(--neon);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px var(--glow);
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    letter-spacing: 1px;
   }
 
-  /* 3. FIX: Sirf content scroll hoga, widgets overlap nahi karenge */
+  /* FIX: Is area mein sirf widget scroll hoga, poori app nahi */
   main {
     flex-grow: 1;
     position: relative;
-    overflow: hidden; /* Bahar ka overflow band */
     padding: 10px;
+    overflow: hidden; 
   }
 
-  .content-container {
+  .content-box {
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(255, 255, 255, 0.02);
     border-radius: 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
   }
 
-  .tab-panel {
+  .panel {
     position: absolute;
     inset: 0;
     display: none;
-    -webkit-overflow-scrolling: touch; /* Smooth mobile scroll */
   }
 
-  .tab-panel.active { display: block; }
+  .panel.active { display: block; }
 
-  /* 4. FIX: Navigation buttons upar shift kar diye hain */
+  /* FIX: Navigation is now clearly above the bottom bar */
   nav {
     height: var(--nav-h);
     flex-shrink: 0;
     background: #000;
     display: flex;
     border-top: 1px solid #333;
-    padding-bottom: env(safe-area-inset-bottom, 10px);
-    z-index: 100;
+    /* Safe Area for iPhone/Android Gestures */
+    padding-bottom: env(safe-area-inset-bottom, 12px); 
+    z-index: 1000;
   }
 
   nav button {
     flex: 1;
     background: none;
     border: none;
-    color: #666;
+    color: #777;
     font-weight: bold;
     font-size: 13px;
     text-transform: uppercase;
-    cursor: pointer;
     transition: 0.3s;
     display: flex;
     align-items: center;
@@ -112,7 +105,6 @@
     color: var(--neon);
     background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent);
     border-top: 4px solid var(--neon);
-    text-shadow: 0 0 8px var(--glow);
   }
 </style>
 </head>
@@ -120,12 +112,12 @@
 
 <div class="app-shell">
   <header>
-    <h1>📈 GROWTH TRADE</h1>
+    <h1>📈 GROWTH TRADE TERMINAL</h1>
   </header>
 
   <main>
-    <div class="content-container">
-      <div id="crypto" class="tab-panel active">
+    <div class="content-box">
+      <div id="crypto" class="panel active">
         <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
         {
           "width": "100%", "height": "100%", "defaultColumn": "overview",
@@ -135,7 +127,7 @@
         </script>
       </div>
 
-      <div id="stocks" class="tab-panel">
+      <div id="stocks" class="panel">
         <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
         {
           "width": "100%", "height": "100%", "defaultColumn": "overview",
@@ -145,43 +137,41 @@
         </script>
       </div>
 
-      <div id="charts" class="tab-panel">
-        <div id="tv_chart_container" style="width: 100%; height: 100%;"></div>
+      <div id="charts" class="panel">
+        <div id="chart_container" style="width: 100%; height: 100%;"></div>
       </div>
     </div>
   </main>
 
   <nav>
-    <button class="active" onclick="openTab('crypto', this)">Crypto</button>
-    <button onclick="openTab('stocks', this)">Stocks</button>
-    <button onclick="openTab('charts', this)">Charts</button>
+    <button class="active" onclick="showTab('crypto', this)">Crypto</button>
+    <button onclick="showTab('stocks', this)">Stocks</button>
+    <button onclick="showTab('charts', this)">Charts</button>
   </nav>
 </div>
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-let chartReady = false;
-function openTab(name, btn) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+let chartInit = false;
+function showTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   
-  document.getElementById(name).classList.add('active');
+  document.getElementById(id).classList.add('active');
   btn.classList.add('active');
 
-  if (name === 'charts' && !chartReady) {
+  if (id === 'charts' && !chartInit) {
     new TradingView.widget({
       "autosize": true,
       "symbol": "BINANCE:BTCUSDT",
       "interval": "15",
       "timezone": "Asia/Kolkata",
       "theme": "dark",
-      "style": "1",
-      "locale": "en",
-      "container_id": "tv_chart_container",
+      "container_id": "chart_container",
       "allow_symbol_change": true,
       "studies": ["RSI@tv-basicstudies"]
     });
-    chartReady = true;
+    chartInit = true;
   }
 }
 </script>
