@@ -3,35 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <title>Growth Trade Pro</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <style>
   :root {
     --bg-gradient: linear-gradient(160deg, #0f0c29 0%, #302b63 100%);
     --neon: #00ff88;
     --card-bg: rgba(10, 14, 26, 0.95);
-    --header-h: 65px;
-    --nav-h: 85px; /* Button ko upar dikhane ke liye height badhayi */
+    --header-h: 60px;
+    --nav-h: 80px; /* Badi height taaki text upar rahe */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body, html {
-    height: 100%;
+  /* CRITICAL MOBILE FIX: height 100% instead of 100vh to prevent browser bar overlap */
+  html, body {
+    height: 100%; 
+    width: 100%;
     background: var(--bg-gradient);
     font-family: 'Segoe UI', sans-serif;
     color: #fff;
-    overflow: hidden;
+    overflow: hidden; /* Prevent page scrolling */
   }
 
   .app-container {
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 100%; /* Fill exact available screen */
+    width: 100%;
   }
 
-  /* 1. Header with Glow */
+  /* 1. Header */
   header {
     height: var(--header-h);
+    flex-shrink: 0; /* Header chhota na ho */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -51,15 +55,15 @@
 
   /* 2. Main Content Area */
   main {
-    flex: 1;
+    flex-grow: 1; /* Saari bachi hui jagah le lega */
     position: relative;
-    padding: 12px;
+    padding: 10px;
     overflow: hidden;
   }
 
   .content-view {
     position: absolute;
-    top: 5px; left: 12px; right: 12px; bottom: 5px;
+    top: 5px; left: 10px; right: 10px; bottom: 5px;
     background: var(--card-bg);
     border-radius: 20px;
     border: 1px solid rgba(0, 255, 136, 0.2);
@@ -70,30 +74,34 @@
 
   .content-view.active { display: block; }
 
-  /* 3. Navigation Bar (FIXED POSITION) */
+  /* 3. Navigation Bar (MOBILE FIX APPLIED) */
   nav {
     height: var(--nav-h);
+    flex-shrink: 0; /* CRITICAL: Nav bar kabhi dabega nahi */
     background: #000;
     display: flex;
-    justify-content: space-around;
-    align-items: flex-start; /* Buttons ko upar ki taraf rakha hai */
-    padding-top: 10px; /* Top se thoda gap */
-    padding-bottom: env(safe-area-inset-bottom); /* iPhone/Android notch support */
     border-top: 1px solid #333;
     z-index: 1000;
+    /* Extra space in bottom for mobile swipe gestures/browser bars */
+    padding-bottom: env(safe-area-inset-bottom, 15px); 
   }
 
   nav button {
     flex: 1;
-    height: 50px; /* Fixed height for clickability */
+    height: 100%;
     background: none;
     border: none;
     color: #888;
     font-weight: bold;
-    font-size: 14px; /* Text thoda bada kiya */
+    font-size: 14px;
     text-transform: uppercase;
     transition: 0.3s;
     cursor: pointer;
+    /* Text ko forcibly upar push karne ke liye padding */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 15px; 
   }
 
   nav button.active {
