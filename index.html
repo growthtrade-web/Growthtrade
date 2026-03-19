@@ -2,101 +2,94 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Growth Trade Ultra Plus</title>
+<title>Growth Trade Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
 <style>
   :root {
-    /* ULTRA COLORFUL GRADIENT */
-    --bg-main: linear-gradient(160deg, #0f0c29 0%, #302b63 35%, #24243e 70%, #000000 100%);
-    --accent-neon: #00ff88;
-    --glass: rgba(255, 255, 255, 0.05);
-    --card-border: rgba(0, 255, 136, 0.3);
+    --bg: #05070a;
+    --card: #0d1117;
+    --neon: #00ff88;
+    --purple: #8a2be2;
+    --text: #ffffff;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body, html {
     height: 100%;
-    background: var(--bg-main);
-    background-attachment: fixed;
+    background: radial-gradient(circle at top, #1a1a2e 0%, #05070a 100%);
     font-family: 'Segoe UI', sans-serif;
-    color: #fff;
+    color: var(--text);
     overflow: hidden;
   }
 
-  .wrapper { display: flex; flex-direction: column; height: 100%; }
+  .main-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
 
-  /* Premium Colorful Header */
+  /* 1. BESTEST HEADER */
   header {
-    height: 60px;
+    height: 55px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(15px);
-    border-bottom: 2px solid var(--accent-neon);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    background: rgba(0, 0, 0, 0.6);
+    border-bottom: 2px solid var(--neon);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+    z-index: 10;
   }
 
   header h1 {
-    font-size: 22px;
+    font-size: 20px;
+    color: var(--neon);
     letter-spacing: 2px;
-    color: var(--accent-neon);
-    text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    text-shadow: 0 0 10px var(--neon);
   }
 
-  /* Ticker Tape Styling */
-  .ticker-area {
-    height: 75px;
-    padding: 10px;
-    flex-shrink: 0;
+  /* 2. PRICE TICKER (FIXED FOR NIFTY) */
+  .ticker-section {
+    height: 65px;
+    background: rgba(13, 17, 23, 0.8);
+    padding: 5px;
+    border-bottom: 1px solid #30363d;
   }
 
-  .ticker-container {
-    height: 100%;
-    background: rgba(13, 17, 34, 0.8);
-    border-radius: 12px;
-    border: 1px solid var(--card-border);
-    overflow: hidden;
-  }
-
-  /* Main Dynamic Section */
+  /* 3. CONTENT AREA (REMAINING SPACE) */
   main {
-    flex-grow: 1;
+    flex: 1;
     position: relative;
-    padding: 0 10px 10px 10px;
+    padding: 8px;
   }
 
-  .page {
+  .tab-content {
     position: absolute;
-    top: 0; left: 10px; right: 10px; bottom: 0;
-    background: rgba(10, 14, 26, 0.9);
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    opacity: 0;
-    pointer-events: none;
-    transition: 0.4s;
+    top: 5px; left: 8px; right: 8px; bottom: 5px;
+    background: var(--card);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: none;
     overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
 
-  .page.active { opacity: 1; pointer-events: auto; }
+  .tab-content.active { display: block; }
 
-  /* Colorful Bottom Nav */
+  /* 4. PREMIUM NAVIGATION */
   nav {
     height: 70px;
     background: #000;
     display: flex;
-    border-top: 1px solid #333;
     padding-bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid #30363d;
   }
 
   nav button {
     flex: 1;
     background: none;
     border: none;
-    color: #777;
+    color: #666;
     font-weight: bold;
     font-size: 12px;
     text-transform: uppercase;
@@ -104,44 +97,38 @@
   }
 
   nav button.active {
-    color: var(--accent-neon);
-    background: linear-gradient(to top, rgba(0, 255, 136, 0.15), transparent);
-    border-top: 3px solid var(--accent-neon);
+    color: var(--neon);
+    background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent);
+    border-top: 3px solid var(--neon);
   }
 </style>
 </head>
-
 <body>
 
-<div class="wrapper">
-  
+<div class="main-app">
   <header>
     <h1>📈 GROWTH TRADE</h1>
   </header>
 
-  <div class="ticker-area">
-    <div class="ticker-container">
-      <script src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js">
-      {
-        "symbols": [
-          {"proName": "INDEX:NIFTY", "title": "NIFTY 50"},
-          {"proName": "INDEX:BANKNIFTY", "title": "BANK NIFTY"},
-          {"proName": "BINANCE:BTCUSDT", "title": "BTC"},
-          {"proName": "BINANCE:ETHUSDT", "title": "ETH"},
-          {"proName": "BINANCE:SOLUSDT", "title": "SOL"}
-        ],
-        "showSymbolLogo": true,
-        "colorTheme": "dark",
-        "isTransparent": true,
-        "displayMode": "adaptive",
-        "locale": "en"
-      }
-      </script>
-    </div>
+  <div class="ticker-section">
+    <script src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js">
+    {
+      "symbols": [
+        {"proName": "FOREXCOM:SPX500", "title": "S&P 500"},
+        {"proName": "BITSTAMP:BTCUSD", "title": "BTC/USD"},
+        {"proName": "BITSTAMP:ETHUSD", "title": "ETH/USD"},
+        {"proName": "NSE:NIFTY", "title": "NIFTY 50"},
+        {"proName": "NSE:BANKNIFTY", "title": "BANK NIFTY"}
+      ],
+      "colorTheme": "dark",
+      "isTransparent": true,
+      "locale": "en"
+    }
+    </script>
   </div>
 
   <main>
-    <div id="crypto" class="page active">
+    <div id="crypto" class="tab-content active">
       <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
       {
         "width": "100%", "height": "100%", "defaultColumn": "overview",
@@ -151,7 +138,7 @@
       </script>
     </div>
 
-    <div id="stocks" class="page">
+    <div id="stocks" class="tab-content">
       <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
       {
         "width": "100%", "height": "100%", "defaultColumn": "overview",
@@ -161,31 +148,31 @@
       </script>
     </div>
 
-    <div id="charts" class="page">
-      <div id="tv_chart" style="width:100%; height:100%;"></div>
+    <div id="charts" class="tab-content">
+      <div id="tradingview_widget" style="width: 100%; height: 100%;"></div>
     </div>
   </main>
 
   <nav>
-    <button class="active" onclick="openTab('crypto', this)">Crypto</button>
-    <button onclick="openTab('stocks', this)">Stocks</button>
-    <button onclick="openTab('charts', this)">Charts</button>
+    <button class="active" onclick="showTab('crypto', this)">Crypto</button>
+    <button onclick="showTab('stocks', this)">Stocks</button>
+    <button onclick="showTab('charts', this)">Charts</button>
   </nav>
-
 </div>
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
 let chartLoaded = false;
-function openTab(id, btn) {
-  document.querySelectorAll(".page").forEach(s => s.classList.remove("active"));
-  document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  btn.classList.add("active");
 
-  if (id === "charts" && !chartLoaded) {
+function showTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+
+  if (id === 'charts' && !chartLoaded) {
     new TradingView.widget({
-      "container_id": "tv_chart",
       "autosize": true,
       "symbol": "BINANCE:BTCUSDT",
       "interval": "15",
@@ -193,13 +180,14 @@ function openTab(id, btn) {
       "theme": "dark",
       "style": "1",
       "locale": "en",
+      "toolbar_bg": "#f1f3f6",
       "enable_publishing": false,
       "allow_symbol_change": true,
-      "details": true,
+      "container_id": "tradingview_widget",
       "studies": ["RSI@tv-basicstudies"]
     });
     chartLoaded = true;
-  } else if (id === "charts") {
+  } else if (id === 'charts') {
     setTimeout(() => { window.dispatchEvent(new Event('resize')); }, 100);
   }
 }
