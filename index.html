@@ -3,43 +3,47 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Growth Trade Terminal Pro</title>
+<title>Growth Trade Terminal</title>
 <style>
-  :root { --neon: #00ff88; --bg: #05070a; --nav-h: 85px; }
+  :root { --neon: #00ff88; --bg: #05070a; --nav-h: 80px; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   
-  /* Prevent scroll bugs */
-  html, body { height: 100%; width: 100%; background: #05070a; color: white; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+  /* Prevent scroll and shake bugs */
+  html, body { 
+    height: 100%; width: 100%; 
+    background: #05070a; color: white; 
+    overflow: hidden; font-family: 'Segoe UI', sans-serif; 
+  }
   
   .app-shell { display: flex; flex-direction: column; height: 100dvh; width: 100%; }
   
-  header { height: 55px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid var(--neon); background: rgba(0,0,0,0.9); z-index: 100; }
-  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); text-transform: uppercase; }
+  header { 
+    height: 55px; flex-shrink: 0; 
+    display: flex; align-items: center; justify-content: center; 
+    border-bottom: 2px solid var(--neon); 
+    background: rgba(0,0,0,0.95); z-index: 100; 
+  }
+  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-  main { flex-grow: 1; position: relative; overflow: hidden; background: #0d1117; padding: 5px; }
+  main { flex-grow: 1; position: relative; overflow: hidden; background: #000; }
 
-  /* Isolated Layer Fix for Overlapping */
+  /* Optimized Layering to stop Overlap Bugs */
   .panel { 
     position: absolute; 
-    top: 5px; left: 5px; right: 5px; bottom: 5px;
-    visibility: hidden; 
-    opacity: 0;
-    background: #0d1117;
-    border-radius: 12px;
-    overflow: hidden;
-    z-index: 1;
-    transition: opacity 0.2s ease;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: none; /* Puri tarah hide taaki lag na ho */
+    background: #000;
   }
-  .panel.active { visibility: visible; opacity: 1; z-index: 10; }
+  .panel.active { display: block; z-index: 10; }
 
-  /* Navigation Fix for Mobile */
+  /* Navigation Fix for Mobile Browser Bars */
   nav { 
     height: var(--nav-h); 
     flex-shrink: 0; 
     background: #000; 
     display: flex; 
     border-top: 1px solid #333; 
-    padding-bottom: env(safe-area-inset-bottom, 18px); 
+    padding-bottom: env(safe-area-inset-bottom, 15px); 
     z-index: 100;
   }
   nav button { 
@@ -47,13 +51,13 @@
     background: none; 
     border: none; 
     color: #555; 
-    font-size: 10px; 
+    font-size: 11px; 
     font-weight: bold; 
     text-transform: uppercase; 
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    transition: 0.2s;
   }
   nav button.active { 
     color: var(--neon); 
@@ -65,7 +69,7 @@
 <body>
 
 <div class="app-shell">
-  <header><h1>📈 GROWTH TRADE TERMINAL</h1></header>
+  <header><h1>📈 GROWTH TRADE</h1></header>
   
   <main>
     <div id="crypto" class="panel active">
@@ -78,12 +82,12 @@
     
     <div id="charts" class="panel"><div id="tv_chart" style="height:100%;"></div></div>
     
-    <div id="analysis" class="panel">
-      <script src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js">{"interval":"15m","width":"100%","isTransparent":false,"height":"100%","symbol":"BINANCE:BTCUSDT","showIntervalTabs":true,"displayMode":"single","locale":"en","colorTheme":"dark"}</script>
+    <div id="events" class="panel">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-events.js">{"width":"100%","height":"100%","colorTheme":"dark","isTransparent":false,"locale":"en","importanceFilter":"-1,0,1"}</script>
     </div>
     
     <div id="heatmap" class="panel">
-      <script src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js">{"container_id":"heatmap","width":"100%","height":"100%","hasTopBar":true,"isDataSetEnabled":true,"colorTheme":"dark","symbolUrl":"","locale":"en"}</script>
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js">{"width":"100%","height":"100%","hasTopBar":true,"isDataSetEnabled":true,"colorTheme":"dark","symbolUrl":"","locale":"en"}</script>
     </div>
   </main>
 
@@ -91,7 +95,7 @@
     <button class="active" onclick="tab('crypto', this)">Crypto</button>
     <button onclick="tab('stocks', this)">Stocks</button>
     <button onclick="tab('charts', this)">Charts</button>
-    <button onclick="tab('analysis', this)">Analysis</button>
+    <button onclick="tab('events', this)">Events</button>
     <button onclick="tab('heatmap', this)">Heatmap</button>
   </nav>
 </div>
@@ -100,12 +104,19 @@
 <script>
 let c=false; 
 function tab(id, b){
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  // 1. Sab panels hide karo (No more overlapping bugs)
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
   document.querySelectorAll('nav button').forEach(n => n.classList.remove('active'));
-  document.getElementById(id).classList.add('active'); 
+  
+  // 2. Sirf select kiya hua panel dikhao
+  document.getElementById(id).style.display = 'block'; 
   b.classList.add('active');
+
+  // 3. Chart load logic (Only once to prevent lag)
   if(id==='charts' && !c){ 
-    new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"15","theme":"dark","container_id":"tv_chart","allow_symbol_change":true,"studies":["RSI@tv-basicstudies","MACD@tv-basicstudies"]}); 
+    new TradingView.widget({
+      "autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"15","theme":"dark","container_id":"tv_chart","allow_symbol_change":true,"studies":["RSI@tv-basicstudies"]
+    }); 
     c=true;
   }
 }
