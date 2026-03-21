@@ -2,197 +2,134 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Growth Trade Terminal Pro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Growth Trade Terminal</title>
 <style>
-  /* 1. Global & Colorful Palette */
-  :root {
-    --bg-gradient: radial-gradient(circle at top, #1a1a2e 0%, #05070a 100%);
-    --bg-tab-panel: #0d1117;
-    --neon-green: #00ff88;
-    --neon-green-glow: rgba(0, 255, 136, 0.3);
-    --text-white: #ffffff;
-    --header-h: 60px;
-    --nav-h: 70px;
+  :root { 
+    --neon: #00ff88; 
+    --bg: #05070a; 
+    /* Safe Area Handle kiya hai */
+    --nav-h: 75px; 
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html, body { 
+    height: 100%; width: 100%; 
+    background: #05070a; color: white; 
+    overflow: hidden; font-family: sans-serif; 
+  }
+  
+  .app-shell { 
+    display: flex; 
+    flex-direction: column; 
+    height: 100dvh; /* Mobile Browser Support */
+    width: 100%; 
+  }
+  
+  header { 
+    height: 55px; 
+    flex-shrink: 0; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border-bottom: 2px solid var(--neon); 
+    background: rgba(0,0,0,0.9); 
+    z-index: 100; 
+  }
+  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-  html, body {
-    height: 100%;
-    width: 100%;
-    /* Colorful Radial Gradient Background */
-    background: var(--bg-gradient);
-    font-family: 'Segoe UI', sans-serif;
-    color: var(--text-white);
-    overflow: hidden; /* Body content scroll nahi hoga */
+  /* 1. Main area ko "Flex Grow" diya taaki niche buttons ko jagah mile */
+  main { 
+    flex: 1; 
+    position: relative; 
+    overflow: hidden; 
+    background: #0d1117;
   }
 
-  /* 2. Main Terminal Grid Layout */
-  .terminal-app {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100%;
+  .panel { 
+    position: absolute; 
+    inset: 0;
+    display: none; 
+    background: #0d1117;
+  }
+  .panel.active { display: block; z-index: 10; }
+
+  /* 2. Navigation Fix: Isse buttons hamesha upar aur saaf dikhenge */
+  nav { 
+    height: var(--nav-h); 
+    flex-shrink: 0; 
+    background: #000; 
+    display: flex; 
+    border-top: 1px solid #333; 
+    /* Buttons ko Safe Area se upar push kiya hai */
+    padding-bottom: env(safe-area-inset-bottom, 12px); 
+    z-index: 1000;
   }
 
-  /* 3. Colorful Header with Glow */
-  header {
-    height: var(--header-h);
+  nav button { 
+    flex: 1; 
+    background: none; 
+    border: none; 
+    color: #666; 
+    font-size: 11px; 
+    font-weight: bold; 
+    text-transform: uppercase; 
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
-    border-bottom: 2px solid var(--neon-green);
-    z-index: 100;
+    padding-top: 5px; /* Text thoda upar shift kiya */
   }
 
-  header h1 {
-    font-size: 22px;
-    color: var(--neon-green);
-    letter-spacing: 2px;
-    text-shadow: 0 0 15px var(--neon-green-glow);
-  }
-
-  /* 4. Tab System Content Area */
-  main {
-    flex-grow: 1; /* Saari available space le lega */
-    position: relative;
-    padding: 10px;
-  }
-
-  /* 5. FIX: Individual isolated layers to prevent bugs */
-  .tab-panel {
-    position: absolute;
-    top: 5px; left: 10px; right: 10px; bottom: 5px;
-    background: var(--bg-tab-panel);
-    border-radius: 18px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-    display: none; /* Hide non-active tabs completely */
-    overflow: hidden; /* prevent internal scrolling bugs */
-    padding: 5px; /* Subtle inset */
-  }
-
-  .tab-panel.active { display: block; } /* Show only active tab */
-
-  .widget-full {
-    width: 100%; height: 100%;
-  }
-
-  /* 6. Colorful Navigation (Premium Glow) */
-  nav {
-    height: calc(var(--nav-h) + env(safe-area-inset-bottom));
-    background: #000;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid #333;
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 100;
-  }
-
-  nav button {
-    flex: 1;
-    height: 100%;
-    background: none;
-    border: none;
-    color: #666;
-    font-weight: bold;
-    font-size: 13px;
-    text-transform: uppercase;
-    transition: 0.3s;
-    cursor: pointer;
-  }
-
-  nav button.active {
-    color: var(--neon-green);
-    background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent);
-    border-top: 3px solid var(--neon-green);
-    text-shadow: 0 0 10px var(--neon-green-glow);
+  nav button.active { 
+    color: var(--neon); 
+    border-top: 4px solid var(--neon); 
+    background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent); 
   }
 </style>
 </head>
 <body>
 
-<div class="terminal-app">
+<div class="app-shell">
+  <header><h1>📈 GROWTH TRADE</h1></header>
   
-  <header>
-    <h1>📈 GROWTH TRADE</h1>
-  </header>
-
   <main>
-    <div id="crypto" class="tab-panel active">
-      <div class="widget-full">
-        <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-        {
-          "width": "100%", "height": "100%", "defaultColumn": "overview",
-          "screener_type": "crypto_mkt", "displayCurrency": "USD",
-          "colorTheme": "dark", "locale": "en"
-        }
-        </script>
-      </div>
+    <div id="crypto" class="panel active">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">{"width":"100%","height":"100%","defaultColumn":"overview","screener_type":"crypto_mkt","displayCurrency":"USD","colorTheme":"dark","locale":"en"}</script>
     </div>
-
-    <div id="stocks" class="tab-panel">
-      <div class="widget-full">
-        <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">
-        {
-          "width": "100%", "height": "100%", "defaultColumn": "overview",
-          "screener_type": "stock", "market": "india",
-          "colorTheme": "dark", "locale": "en"
-        }
-        </script>
-      </div>
+    <div id="stocks" class="panel">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js">{"width":"100%","height":"100%","defaultColumn":"overview","screener_type":"stock","market":"india","colorTheme":"dark","locale":"en"}</script>
     </div>
-
-    <div id="charts" class="tab-panel">
-      <div id="tradingview_chart_container" class="widget-full"></div>
+    <div id="charts" class="panel"><div id="tv_chart" style="height:100%;"></div></div>
+    <div id="events" class="panel">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-events.js">{"width":"100%","height":"100%","colorTheme":"dark","isTransparent":false,"locale":"en","importanceFilter":"-1,0,1"}</script>
+    </div>
+    <div id="heatmap" class="panel">
+      <script src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js">{"width":"100%","height":"100%","hasTopBar":true,"isDataSetEnabled":true,"colorTheme":"dark","symbolUrl":"","locale":"en"}</script>
     </div>
   </main>
 
   <nav>
-    <button class="active" onclick="switchTab('crypto', this)">Crypto</button>
-    <button onclick="switchTab('stocks', this)">Stocks</button>
-    <button onclick="switchTab('charts', this)">Charts</button>
+    <button class="active" onclick="tab('crypto', this)">Crypto</button>
+    <button onclick="tab('stocks', this)">Stocks</button>
+    <button onclick="tab('charts', this)">Charts</button>
+    <button onclick="tab('events', this)">Events</button>
+    <button onclick="tab('heatmap', this)">Heatmap</button>
   </nav>
-
 </div>
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-let chartLoaded = false;
-function switchTab(id, btn) {
-  // Hide all sections
-  document.querySelectorAll('.tab-panel').forEach(section => section.classList.remove('active'));
-  // Reset buttons
-  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-
-  // Activate selected tab section
-  document.getElementById(id).classList.add('active');
-  btn.classList.add('active');
-
-  // Load chart only once
-  if (id === 'charts' && !chartLoaded) {
-    new TradingView.widget({
-      "autosize": true,
-      "symbol": "BINANCE:BTCUSDT",
-      "interval": "15",
-      "timezone": "Asia/Kolkata",
-      "theme": "dark",
-      "style": "1",
-      "locale": "en",
-      "toolbar_bg": "#f1f3f6",
-      "enable_publishing": false,
-      "allow_symbol_change": true,
-      "container_id": "tradingview_chart_container",
-      "studies": ["RSI@tv-basicstudies"]
-    });
-    chartLoaded = true;
+let c=false; 
+function tab(id, b){
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('nav button').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).style.display = 'block'; 
+  b.classList.add('active');
+  if(id==='charts' && !c){ 
+    new TradingView.widget({"autosize":true,"symbol":"BINANCE:BTCUSDT","interval":"15","theme":"dark","container_id":"tv_chart","allow_symbol_change":true,"studies":["RSI@tv-basicstudies"]}); 
+    c=true;
   }
 }
 </script>
-
 </body>
 </html>
