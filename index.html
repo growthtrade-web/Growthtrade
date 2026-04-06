@@ -3,72 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Trade | Global Dashboard</title>
+    <title>Growth Trade | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0d1117; color: #c9d1d9; font-family: 'Inter', sans-serif; }
-        .active-tab { border-bottom: 3px solid #22c55e; color: #22c55e; }
-        .tab-content { display: none; }
-        .show { display: block; }
-        iframe { border-radius: 8px; background: #161b22; }
+        body { background-color: #121212; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .nav-link { color: #9ca3af; cursor: pointer; padding-bottom: 4px; transition: 0.3s; border-bottom: 2px solid transparent; }
+        .nav-link:hover, .active { color: #22c55e; border-bottom: 2px solid #22c55e; }
+        .content-section { display: none; }
+        .active-section { display: block; }
+        iframe { width: 100%; height: 600px; border: none; border-radius: 8px; background: #1a1a1a; }
     </style>
 </head>
-<body class="p-2 md:p-6">
+<body class="p-4">
 
-    <header class="flex justify-between items-center mb-8 bg-[#161b22] p-4 rounded-xl shadow-lg border border-[#30363d]">
-        <div class="flex items-center gap-2">
-            <span class="text-2xl">📈</span>
-            <h1 class="text-xl font-bold text-green-500 tracking-tight">GROWTH TRADE</h1>
-        </div>
-        <div class="text-xs text-gray-400">Live Global Market</div>
-    </header>
+    <div class="flex items-center justify-center gap-2 mb-4 border-b border-green-500 pb-2">
+        <img src="https://cdn-icons-png.flaticon.com/512/4222/4222025.png" width="30" alt="logo">
+        <h1 class="text-2xl font-bold text-green-500 uppercase tracking-widest">GROWTH TRADE</h1>
+    </div>
 
-    <nav class="flex space-x-6 border-b border-[#30363d] mb-6 overflow-x-auto">
-        <button onclick="openTab(event, 'crypto')" class="tab-links active-tab pb-2 font-semibold">CRYPTO</button>
-        <button onclick="openTab(event, 'indian')" class="tab-links pb-2 font-semibold text-gray-400">INDIAN STOCKS</button>
-        <button onclick="openTab(event, 'us-stocks')" class="tab-links pb-2 font-semibold text-gray-400">US STOCKS</button>
+    <nav class="flex justify-between md:justify-center md:gap-10 text-xs md:text-sm font-bold uppercase mb-6 overflow-x-auto whitespace-nowrap py-2">
+        <span onclick="showPage('crypto')" class="nav-link active" id="btn-crypto">CRYPTO</span>
+        <span onclick="showPage('stocks')" class="nav-link" id="btn-stocks">STOCKS</span>
+        <span onclick="showPage('charts')" class="nav-link" id="btn-charts">CHARTS</span>
+        <span onclick="showPage('events')" class="nav-link" id="btn-events">EVENTS</span>
+        <span onclick="showPage('heatmap')" class="nav-link" id="btn-heatmap">HEATMAP</span>
     </nav>
 
-    <div id="crypto" class="tab-content show animate-fadeIn">
-        <h2 class="text-lg mb-4 text-gray-300 font-medium">Crypto Market Heatmap</h2>
-        <div style="height: 600px; width: 100%;">
-            <iframe src="https://www.tradingview.com/embed-widget/crypto-coins-heatmap/?locale=en#%7B%22symbol%22%3A%22BTCUSDT%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22adaptive%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%7D" width="100%" height="100%" frameborder="0"></iframe>
-        </div>
+    <div id="crypto" class="content-section active-section">
+        <iframe src="https://www.tradingview.com/embed-widget/crypto-mkt-screener/?locale=en&colorTheme=dark"></iframe>
     </div>
 
-    <div id="indian" class="tab-content animate-fadeIn">
-        <h2 class="text-lg mb-4 text-gray-300 font-medium">NSE/BSE Market Heatmap</h2>
-        <div style="height: 600px; width: 100%;">
-            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?locale=en#%7B%22exchanges%22%3A%5B%22NSE%22%5D%2C%22dataSource%22%3A%22SENSEX%22%2C%22grouping%22%3A%22sector%22%2C%22index%22%3A%22%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22adaptive%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%7D" width="100%" height="100%" frameborder="0"></iframe>
-        </div>
+    <div id="stocks" class="content-section">
+        <iframe src="https://www.tradingview.com/embed-widget/hotlists/?locale=en&colorTheme=dark&exchange=NSE"></iframe>
     </div>
 
-    <div id="us-stocks" class="tab-content animate-fadeIn">
-        <h2 class="text-lg mb-4 text-gray-300 font-medium">S&P 500 Heatmap</h2>
-        <div style="height: 600px; width: 100%;">
-            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?locale=en#%7B%22exchanges%22%3A%5B%5D%2C%22dataSource%22%3A%22SPX500%22%2C%22grouping%22%3A%22sector%22%2C%22index%22%3A%22%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Afalse%2C%22displayMode%22%3A%22adaptive%22%2C%22width%22%3A%22100%25%22%2C%22height%22%3A%22100%25%22%7D" width="100%" height="100%" frameborder="0"></iframe>
-        </div>
+    <div id="charts" class="content-section">
+        <iframe src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_76796&symbol=BINANCE:BTCUSDT&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC"></iframe>
     </div>
 
-    <footer class="mt-10 text-center text-gray-500 text-xs border-t border-[#30363d] pt-6 pb-10">
-        &copy; 2026 Growth Trade Masterguide. All rights reserved.
-    </footer>
+    <div id="events" class="content-section">
+        <iframe src="https://www.tradingview.com/embed-widget/events/?locale=en&colorTheme=dark&width=100%&height=600"></iframe>
+    </div>
+
+    <div id="heatmap" class="content-section">
+        <div class="flex gap-2 mb-4 overflow-x-auto">
+            <button onclick="changeHeatmap('crypto-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">Crypto</button>
+            <button onclick="changeHeatmap('india-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">Indian Stocks</button>
+            <button onclick="changeHeatmap('us-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">US Stocks</button>
+        </div>
+        
+        <div id="crypto-map" class="h-map">
+            <iframe src="https://www.tradingview.com/embed-widget/crypto-coins-heatmap/?colorTheme=dark&width=100%&height=600"></iframe>
+        </div>
+        <div id="india-map" class="h-map hidden">
+            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?exchange=NSE&colorTheme=dark&width=100%&height=600"></iframe>
+        </div>
+        <div id="us-map" class="h-map hidden">
+            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?dataSource=SPX500&colorTheme=dark&width=100%&height=600"></iframe>
+        </div>
+    </div>
 
     <script>
-        function openTab(evt, tabName) {
-            var i, tabContent, tabLinks;
-            tabContent = document.getElementsByClassName("tab-content");
-            for (i = 0; i < tabContent.length; i++) {
-                tabContent[i].style.display = "none";
-            }
-            tabLinks = document.getElementsByClassName("tab-links");
-            for (i = 0; i < tabLinks.length; i++) {
-                tabLinks[i].className = tabLinks[i].className.replace(" active-tab", "");
-                tabLinks[i].classList.add("text-gray-400");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active-tab";
-            evt.currentTarget.classList.remove("text-gray-400");
+        function showPage(id) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(s => s.classList.remove('active-section'));
+            
+            // Remove active class from nav
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(l => l.classList.remove('active'));
+
+            // Show selected
+            document.getElementById(id).classList.add('active-section');
+            document.getElementById('btn-' + id).classList.add('active');
+        }
+
+        function changeHeatmap(mapId) {
+            const maps = document.querySelectorAll('.h-map');
+            maps.forEach(m => m.classList.add('hidden'));
+            document.getElementById(mapId).classList.remove('hidden');
         }
     </script>
 </body>
