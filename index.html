@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Growth Trade Terminal v3</title>
+<title>Growth Trade Terminal v4</title>
 <style>
-  :root { --neon: #00ff88; --nav-h: 75px; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --neon: #00ff88; --nav-h: 70px; --bg: #000; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   
   html, body { 
     height: 100%; width: 100%; 
-    background: #000; color: white; 
+    background: var(--bg); color: white; 
     overflow: hidden; font-family: sans-serif; 
   }
   
@@ -19,37 +19,40 @@
   header { 
     height: 50px; flex-shrink: 0; 
     display: flex; align-items: center; justify-content: center; 
-    border-bottom: 2px solid var(--neon); 
-    background: #000; z-index: 100; 
+    border-bottom: 2px solid var(--neon); background: #000; z-index: 100; 
   }
   header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
 
-  /* Widget Container */
   main { flex: 1; position: relative; background: #000; overflow: hidden; }
-  #widget-container { width: 100%; height: 100%; border: none; }
-
-  /* Navigation Fix for Mobile */
+  
+  /* Navigation Fix */
   nav { 
-    height: var(--nav-h); 
-    flex-shrink: 0; 
-    background: #000; 
-    display: flex; 
-    border-top: 1px solid #333; 
-    padding-bottom: env(safe-area-inset-bottom, 15px); 
-    z-index: 1000;
+    height: var(--nav-h); flex-shrink: 0; background: #000; 
+    display: flex; border-top: 1px solid #333; 
+    padding-bottom: env(safe-area-inset-bottom, 15px); z-index: 1000;
   }
   nav button { 
     flex: 1; background: none; border: none; 
     color: #555; font-size: 10px; font-weight: bold; 
     text-transform: uppercase; display: flex; 
-    align-items: center; justify-content: center;
-    cursor: pointer;
+    align-items: center; justify-content: center; cursor: pointer;
   }
   nav button.active { 
-    color: var(--neon); 
-    border-top: 3px solid var(--neon); 
+    color: var(--neon); border-top: 3px solid var(--neon); 
     background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent); 
   }
+
+  /* Heatmap Category Switcher */
+  .map-tabs {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; background: rgba(0,0,0,0.8);
+    padding: 6px; border-radius: 30px; border: 1px solid #444; z-index: 10;
+  }
+  .map-tabs button {
+    background: #222; border: none; color: #aaa; padding: 6px 15px;
+    border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: bold;
+  }
+  .map-tabs button.active-sub { background: var(--neon); color: #000; }
 </style>
 </head>
 <body>
@@ -75,74 +78,88 @@
 const container = document.getElementById('content-area');
 
 function loadWidget(type, btn) {
-  // 1. Navigation Active State
   document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  container.innerHTML = ""; // Clean logic
 
-  // 2. Clear Content (Isse Overlapping Bug 100% khatam)
-  container.innerHTML = "";
-
-  // 3. Load New Widget
   if (type === 'crypto') {
-    const script = document.createElement('script');
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "width": "100%", "height": "100%", "defaultColumn": "overview",
-      "screener_type": "crypto_mkt", "displayCurrency": "USD",
-      "colorTheme": "dark", "locale": "en"
+    injectScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {
+      "width": "100%", "height": "100%", "screener_type": "crypto_mkt", "colorTheme": "dark", "locale": "en"
     });
-    container.appendChild(script);
   } 
-  
   else if (type === 'stocks') {
-    const script = document.createElement('script');
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "width": "100%", "height": "100%", "defaultColumn": "overview",
-      "screener_type": "stock", "market": "india",
-      "colorTheme": "dark", "locale": "en"
+    injectScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {
+      "width": "100%", "height": "100%", "screener_type": "stock", "market": "india", "colorTheme": "dark", "locale": "en"
     });
-    container.appendChild(script);
   }
-
   else if (type === 'charts') {
     const div = document.createElement('div');
-    div.id = "tv_chart_main";
+    div.id = "tv_chart";
     div.style.height = "100%";
     container.appendChild(div);
     new TradingView.widget({
       "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "15",
-      "theme": "dark", "container_id": "tv_chart_main", "allow_symbol_change": true
+      "theme": "dark", "container_id": "tv_chart", "allow_symbol_change": true
     });
   }
-
   else if (type === 'events') {
-    const script = document.createElement('script');
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
+    injectScript("https://s3.tradingview.com/external-embedding/embed-widget-events.js", {
       "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"
     });
-    container.appendChild(script);
   }
-
   else if (type === 'heatmap') {
-    const script = document.createElement('script');
-    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"
-    });
-    container.appendChild(script);
+    // Sub-navigation for Heatmap
+    const navDiv = document.createElement('div');
+    navDiv.className = "map-tabs";
+    navDiv.innerHTML = `
+      <button id="m1" class="active-sub" onclick="runHeatmap('crypto', 'm1')">Crypto</button>
+      <button id="m2" onclick="runHeatmap('india', 'm2')">India</button>
+      <button id="m3" onclick="runHeatmap('us', 'm3')">US</button>
+    `;
+    container.appendChild(navDiv);
+
+    const mapDisplay = document.createElement('div');
+    mapDisplay.id = "map-render";
+    mapDisplay.style.height = "100%";
+    container.appendChild(mapDisplay);
+
+    runHeatmap('crypto', 'm1'); // Initial load
   }
 }
 
-// Initial Load
-window.onload = () => {
-  loadWidget('crypto', document.querySelector('#bottom-nav button'));
-};
+function runHeatmap(market, btnId) {
+  const display = document.getElementById('map-render');
+  display.innerHTML = ""; // Clear old map
+  document.querySelectorAll('.map-tabs button').forEach(b => b.classList.remove('active-sub'));
+  document.getElementById(btnId).classList.add('active-sub');
+
+  let scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
+  let config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en" };
+
+  if (market === 'crypto') {
+    scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js";
+  } else if (market === 'india') {
+    config.exchange = "NSE";
+  } else {
+    config.dataSource = "SPX500";
+  }
+
+  const script = document.createElement('script');
+  script.src = scriptUrl;
+  script.async = true;
+  script.innerHTML = JSON.stringify(config);
+  display.appendChild(script);
+}
+
+function injectScript(src, config) {
+  const script = document.createElement('script');
+  script.src = src;
+  script.async = true;
+  script.innerHTML = JSON.stringify(config);
+  container.appendChild(script);
+}
+
+window.onload = () => loadWidget('crypto', document.querySelector('#bottom-nav button'));
 </script>
 </body>
 </html>
