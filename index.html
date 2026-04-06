@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Growth Trade pro v7</title>
+<title>Growth Trade Terminal v8</title>
 <style>
   :root { --neon: #00ff88; --nav-h: 70px; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -16,10 +16,9 @@
   nav button { flex: 1; background: none; border: none; color: #555; font-size: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
   nav button.active { color: var(--neon); border-top: 3px solid var(--neon); }
   
-  /* Heatmap Selector Styling */
-  .map-tabs { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(0,0,0,0.9); padding: 6px; border-radius: 30px; border: 1px solid #444; z-index: 2000; }
-  .map-tabs button { background: #222; border: none; color: #aaa; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; font-weight: bold; }
-  .map-tabs button.active-sub { background: var(--neon); color: #000; }
+  .map-tabs { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(0,0,0,0.95); padding: 6px; border-radius: 30px; border: 1px solid #444; z-index: 2000; }
+  .map-tabs button { background: #222; border: none; color: #aaa; padding: 6px 14px; border-radius: 20px; font-size: 11px; cursor: pointer; }
+  .map-tabs button.active-sub { background: var(--neon); color: #000; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -55,13 +54,11 @@ function loadWidget(type, btn) {
   } else if (type === 'events') {
     renderScript("https://s3.tradingview.com/external-embedding/embed-widget-events.js", {"width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"});
   } else if (type === 'heatmap') {
-    // Switcher HTML
     const navDiv = document.createElement('div'); navDiv.className = "map-tabs";
     navDiv.innerHTML = `<button id="m1" class="active-sub" onclick="runHeatmap('crypto', 'm1')">Crypto</button>
-                        <button id="m2" onclick="runHeatmap('india', 'm2')">India</button>
+                        <button id="m2" onclick="runHeatmap('india', 'm2')">India (BSE)</button>
                         <button id="m3" onclick="runHeatmap('us', 'm3')">US</button>`;
     container.appendChild(navDiv);
-    
     const mapDisplay = document.createElement('div'); mapDisplay.id = "map-render"; mapDisplay.style.height = "100%"; container.appendChild(mapDisplay);
     runHeatmap('crypto', 'm1');
   }
@@ -69,27 +66,25 @@ function loadWidget(type, btn) {
 
 function runHeatmap(market, btnId) {
   const display = document.getElementById('map-render');
-  display.innerHTML = ""; // Pehle purana widget delete karo
+  display.innerHTML = ""; 
   document.querySelectorAll('.map-tabs button').forEach(b => b.classList.remove('active-sub'));
   document.getElementById(btnId).classList.add('active-sub');
 
   let scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
-  let config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en", "hasTopBar": false, "isTransparent": false };
+  let config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en", "hasTopBar": false, "isTransparent": false, "grouping": "sector" };
 
   if (market === 'crypto') {
     scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js";
   } else if (market === 'india') {
-    // STRICT NSE NIFTY 50 CONFIG
-    config.dataSource = "NIFTY50"; 
-    config.grouping = "sector";
+    // BSE ALL STOCKS CONFIG
+    config.exchange = "BSE";
+    config.dataSource = "AllIndia"; 
   } else {
-    // US S&P 500 CONFIG
     config.dataSource = "SPX500";
-    config.grouping = "sector";
   }
 
   const script = document.createElement('script');
-  script.src = scriptUrl + "?v=" + new Date().getTime(); // Browser Cache Bypass
+  script.src = scriptUrl + "?v=" + Math.random(); // Total force fresh load
   script.async = true;
   script.innerHTML = JSON.stringify(config);
   display.appendChild(script);
