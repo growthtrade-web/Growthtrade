@@ -1,88 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growth Trade | Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        body { background-color: #121212; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .nav-link { color: #9ca3af; cursor: pointer; padding-bottom: 4px; transition: 0.3s; border-bottom: 2px solid transparent; }
-        .nav-link:hover, .active { color: #22c55e; border-bottom: 2px solid #22c55e; }
-        .content-section { display: none; }
-        .active-section { display: block; }
-        iframe { width: 100%; height: 600px; border: none; border-radius: 8px; background: #1a1a1a; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Growth Trade Terminal v3</title>
+<style>
+  :root { --neon: #00ff88; --nav-h: 75px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html, body { 
+    height: 100%; width: 100%; 
+    background: #000; color: white; 
+    overflow: hidden; font-family: sans-serif; 
+  }
+  
+  .app-shell { display: flex; flex-direction: column; height: 100dvh; width: 100%; }
+  
+  header { 
+    height: 50px; flex-shrink: 0; 
+    display: flex; align-items: center; justify-content: center; 
+    border-bottom: 2px solid var(--neon); 
+    background: #000; z-index: 100; 
+  }
+  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+
+  /* Widget Container */
+  main { flex: 1; position: relative; background: #000; overflow: hidden; }
+  #widget-container { width: 100%; height: 100%; border: none; }
+
+  /* Navigation Fix for Mobile */
+  nav { 
+    height: var(--nav-h); 
+    flex-shrink: 0; 
+    background: #000; 
+    display: flex; 
+    border-top: 1px solid #333; 
+    padding-bottom: env(safe-area-inset-bottom, 15px); 
+    z-index: 1000;
+  }
+  nav button { 
+    flex: 1; background: none; border: none; 
+    color: #555; font-size: 10px; font-weight: bold; 
+    text-transform: uppercase; display: flex; 
+    align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  nav button.active { 
+    color: var(--neon); 
+    border-top: 3px solid var(--neon); 
+    background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent); 
+  }
+</style>
 </head>
-<body class="p-4">
+<body>
 
-    <div class="flex items-center justify-center gap-2 mb-4 border-b border-green-500 pb-2">
-        <img src="https://cdn-icons-png.flaticon.com/512/4222/4222025.png" width="30" alt="logo">
-        <h1 class="text-2xl font-bold text-green-500 uppercase tracking-widest">GROWTH TRADE</h1>
-    </div>
+<div class="app-shell">
+  <header><h1>📈 GROWTH TRADE</h1></header>
+  
+  <main id="view-port">
+    <div id="content-area" style="width:100%; height:100%;"></div>
+  </main>
 
-    <nav class="flex justify-between md:justify-center md:gap-10 text-xs md:text-sm font-bold uppercase mb-6 overflow-x-auto whitespace-nowrap py-2">
-        <span onclick="showPage('crypto')" class="nav-link active" id="btn-crypto">CRYPTO</span>
-        <span onclick="showPage('stocks')" class="nav-link" id="btn-stocks">STOCKS</span>
-        <span onclick="showPage('charts')" class="nav-link" id="btn-charts">CHARTS</span>
-        <span onclick="showPage('events')" class="nav-link" id="btn-events">EVENTS</span>
-        <span onclick="showPage('heatmap')" class="nav-link" id="btn-heatmap">HEATMAP</span>
-    </nav>
+  <nav id="bottom-nav">
+    <button class="active" onclick="loadWidget('crypto', this)">Crypto</button>
+    <button onclick="loadWidget('stocks', this)">Stocks</button>
+    <button onclick="loadWidget('charts', this)">Charts</button>
+    <button onclick="loadWidget('events', this)">Events</button>
+    <button onclick="loadWidget('heatmap', this)">Heatmap</button>
+  </nav>
+</div>
 
-    <div id="crypto" class="content-section active-section">
-        <iframe src="https://www.tradingview.com/embed-widget/crypto-mkt-screener/?locale=en&colorTheme=dark"></iframe>
-    </div>
+<script src="https://s3.tradingview.com/tv.js"></script>
+<script>
+const container = document.getElementById('content-area');
 
-    <div id="stocks" class="content-section">
-        <iframe src="https://www.tradingview.com/embed-widget/hotlists/?locale=en&colorTheme=dark&exchange=NSE"></iframe>
-    </div>
+function loadWidget(type, btn) {
+  // 1. Navigation Active State
+  document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
 
-    <div id="charts" class="content-section">
-        <iframe src="https://www.tradingview.com/widgetembed/?frameElementId=tradingview_76796&symbol=BINANCE:BTCUSDT&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC"></iframe>
-    </div>
+  // 2. Clear Content (Isse Overlapping Bug 100% khatam)
+  container.innerHTML = "";
 
-    <div id="events" class="content-section">
-        <iframe src="https://www.tradingview.com/embed-widget/events/?locale=en&colorTheme=dark&width=100%&height=600"></iframe>
-    </div>
+  // 3. Load New Widget
+  if (type === 'crypto') {
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      "width": "100%", "height": "100%", "defaultColumn": "overview",
+      "screener_type": "crypto_mkt", "displayCurrency": "USD",
+      "colorTheme": "dark", "locale": "en"
+    });
+    container.appendChild(script);
+  } 
+  
+  else if (type === 'stocks') {
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-screener.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      "width": "100%", "height": "100%", "defaultColumn": "overview",
+      "screener_type": "stock", "market": "india",
+      "colorTheme": "dark", "locale": "en"
+    });
+    container.appendChild(script);
+  }
 
-    <div id="heatmap" class="content-section">
-        <div class="flex gap-2 mb-4 overflow-x-auto">
-            <button onclick="changeHeatmap('crypto-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">Crypto</button>
-            <button onclick="changeHeatmap('india-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">Indian Stocks</button>
-            <button onclick="changeHeatmap('us-map')" class="bg-gray-800 px-4 py-1 rounded text-xs hover:bg-green-600">US Stocks</button>
-        </div>
-        
-        <div id="crypto-map" class="h-map">
-            <iframe src="https://www.tradingview.com/embed-widget/crypto-coins-heatmap/?colorTheme=dark&width=100%&height=600"></iframe>
-        </div>
-        <div id="india-map" class="h-map hidden">
-            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?exchange=NSE&colorTheme=dark&width=100%&height=600"></iframe>
-        </div>
-        <div id="us-map" class="h-map hidden">
-            <iframe src="https://www.tradingview.com/embed-widget/stock-heatmap/?dataSource=SPX500&colorTheme=dark&width=100%&height=600"></iframe>
-        </div>
-    </div>
+  else if (type === 'charts') {
+    const div = document.createElement('div');
+    div.id = "tv_chart_main";
+    div.style.height = "100%";
+    container.appendChild(div);
+    new TradingView.widget({
+      "autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "15",
+      "theme": "dark", "container_id": "tv_chart_main", "allow_symbol_change": true
+    });
+  }
 
-    <script>
-        function showPage(id) {
-            // Hide all sections
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(s => s.classList.remove('active-section'));
-            
-            // Remove active class from nav
-            const links = document.querySelectorAll('.nav-link');
-            links.forEach(l => l.classList.remove('active'));
+  else if (type === 'events') {
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-events.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"
+    });
+    container.appendChild(script);
+  }
 
-            // Show selected
-            document.getElementById(id).classList.add('active-section');
-            document.getElementById('btn-' + id).classList.add('active');
-        }
+  else if (type === 'heatmap') {
+    const script = document.createElement('script');
+    script.src = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"
+    });
+    container.appendChild(script);
+  }
+}
 
-        function changeHeatmap(mapId) {
-            const maps = document.querySelectorAll('.h-map');
-            maps.forEach(m => m.classList.add('hidden'));
-            document.getElementById(mapId).classList.remove('hidden');
-        }
-    </script>
+// Initial Load
+window.onload = () => {
+  loadWidget('crypto', document.querySelector('#bottom-nav button'));
+};
+</script>
 </body>
 </html>
