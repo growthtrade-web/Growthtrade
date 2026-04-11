@@ -3,38 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Growth Trade Terminal v13</title>
+<title>Growth Trade Terminal v12</title>
 <style>
   :root { --neon: #00ff88; --nav-h: 70px; }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; width: 100%; background: #000; color: white; overflow: hidden; font-family: sans-serif; overscroll-behavior-y: contain; }
+  html, body { 
+    height: 100%; width: 100%; background: #000; color: white; 
+    overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    overscroll-behavior-y: contain;
+  }
   .app-shell { display: flex; flex-direction: column; height: 100dvh; }
   header { height: 50px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid var(--neon); background: #000; z-index: 100; }
-  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-  
-  #ticker-area { height: 40px; background: #000; overflow: hidden; border-bottom: 1px solid #222; }
-
+  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); letter-spacing: 1px; }
   main { flex: 1; position: relative; overflow: hidden; background: #000; }
   nav { height: var(--nav-h); background: #000; display: flex; border-top: 1px solid #333; padding-bottom: env(safe-area-inset-bottom, 15px); overflow-x: auto; }
-  nav button { flex: 1; min-width: 70px; background: none; border: none; color: #666; font-size: 9px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+  nav button { flex: 1; min-width: 70px; background: none; border: none; color: #666; font-size: 9px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
   nav button.active { color: var(--neon); border-top: 3px solid var(--neon); background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent); }
+  #content-area { animation: fadeIn 0.3s ease; height: 100%; width: 100%; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .map-tabs { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(0,0,0,0.95); padding: 5px; border-radius: 30px; border: 1px solid #444; z-index: 2000; }
+  .map-tabs button { background: #222; border: none; color: #aaa; padding: 6px 12px; border-radius: 20px; font-size: 10px; }
+  .map-tabs button.active-sub { background: var(--neon); color: #000; font-weight: bold; }
 </style>
 </head>
 <body>
 
 <div class="app-shell">
   <header><h1>📈 GROWTH TRADE</h1></header>
-  
-  <div id="ticker-area"></div>
-
-  <main id="view-port"><div id="content-area" style="width:100%; height:100%;"></div></main>
-  
+  <main id="view-port"><div id="content-area"></div></main>
   <nav id="bottom-nav">
     <button class="active" onclick="loadWidget('crypto', this)">Crypto</button>
     <button onclick="loadWidget('india_stocks', this)">India</button>
     <button onclick="loadWidget('market_stats', this)">Indices</button>
-    <button onclick="loadWidget('signals', this)">Signals</button>
     <button onclick="loadWidget('charts', this)">Charts</button>
+    <button onclick="loadWidget('events', this)">Events</button>
     <button onclick="loadWidget('heatmap', this)">Map</button>
   </nav>
 </div>
@@ -42,24 +44,6 @@
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
 const container = document.getElementById('content-area');
-const tickerArea = document.getElementById('ticker-area');
-
-function loadTicker() {
-  const script = document.createElement('script');
-  script.src = "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js";
-  script.async = true;
-  script.innerHTML = JSON.stringify({
-    "symbols": [
-      {"proName": "FOREXCOM:SPX500", "title": "S&P 500"},
-      {"proName": "BITSTAMP:BTCUSD", "title": "Bitcoin"},
-      {"s": "NSE:NIFTY", "d": "Nifty 50"},
-      {"s": "BSE:SENSEX", "d": "Sensex"},
-      {"s": "FX_IDC:INRUSD", "title": "USD/INR"}
-    ],
-    "showSymbolLogo": true, "colorTheme": "dark", "isTransparent": false, "displayMode": "adaptive", "locale": "en"
-  });
-  tickerArea.appendChild(script);
-}
 
 function renderScript(src, config) {
   container.innerHTML = ""; 
@@ -82,53 +66,81 @@ function loadWidget(type, btn) {
     renderScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {"width": "100%", "height": "100%", "screener_type": "stock", "market": "india", "colorTheme": "dark", "locale": "en"});
   }
   else if (type === 'market_stats') {
-    // Top 20 Economies ke Best Working Indices
     renderScript("https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js", {
       "colorTheme": "dark", "showChart": true, "locale": "en", "width": "100%", "height": "100%", "showSymbolLogo": true, "tabs": [
-        { "title": "Global Top 20", "symbols": [
-            {"s": "FOREXCOM:SPX500", "d": "USA (S&P 500)"},
-            {"s": "FOREXCOM:NSXUSD", "d": "USA (Nasdaq 100)"},
-            {"s": "NSE:NIFTY", "d": "India (Nifty 50)"},
-            {"s": "INDEX:DAX", "d": "Germany (DAX 40)"},
-            {"s": "INDEX:UKX", "d": "UK (FTSE 100)"},
-            {"s": "INDEX:NI225", "d": "Japan (Nikkei 225)"},
-            {"s": "INDEX:CAC40", "d": "France (CAC 40)"},
-            {"s": "INDEX:HSI", "d": "Hong Kong (HSI)"},
-            {"s": "INDEX:AS51", "d": "Australia (ASX 200)"},
-            {"s": "TSX:TSX", "d": "Canada (TSX)"},
-            {"s": "INDEX:IBEX", "d": "Spain (IBEX 35)"},
-            {"s": "INDEX:FTSEMIB", "d": "Italy (FTSE MIB)"},
-            {"s": "INDEX:SMI", "d": "Switzerland (SMI)"},
-            {"s": "INDEX:STI", "d": "Singapore (STI)"},
-            {"s": "INDEX:AEX", "d": "Netherlands (AEX)"},
-            {"s": "INDEX:OMX30", "d": "Sweden (OMX 30)"},
-            {"s": "INDEX:BEL20", "d": "Belgium (BEL 20)"},
-            {"s": "Euronext:PSI20", "d": "Portugal (PSI 20)"},
-            {"s": "INDEX:KS11", "d": "S. Korea (KOSPI)"},
-            {"s": "INDEX:SET", "d": "Thailand (SET)"}
+        { "title": "Global Live Indices", "symbols": [
+            /* Asia & Pacific */
+            {"s": "NSE:NIFTY", "d": "Nifty 50 (India)"},
+            {"s": "BSE:SENSEX", "d": "Sensex (India)"},
+            {"s": "INDEX:NI225", "d": "Nikkei 225 (Japan)"}, 
+            {"s": "INDEX:HSI", "d": "Hang Seng (HK)"},
+            {"s": "INDEX:STI", "d": "Straits Times (SG)"},
+            {"s": "INDEX:ASX200", "d": "ASX 200 (Australia)"},
+            {"s": "INDEX:KS11", "d": "KOSPI (S. Korea)"},
+            {"s": "INDEX:SET", "d": "SET (Thailand)"},
+            /* Americas */
+            {"s": "FOREXCOM:SPX500", "d": "S&P 500 (US)"}, 
+            {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100 (US)"}, 
+            {"s": "FOREXCOM:DJI", "d": "Dow Jones (US)"},
+            {"s": "TSX:TSX", "d": "TSX (Canada)"},
+            {"s": "BMV:ME", "d": "S&P/BMV IPC (Mexico)"},
+            {"s": "TVC:IBOV", "d": "IBOVESPA (Brazil)"},
+            /* Europe */
+            {"s": "INDEX:DAX", "d": "DAX 40 (Germany)"}, 
+            {"s": "INDEX:UKX", "d": "FTSE 100 (UK)"}, 
+            {"s": "INDEX:CAC40", "d": "CAC 40 (France)"},
+            {"s": "INDEX:IBEX", "d": "IBEX 35 (Spain)"},
+            {"s": "INDEX:FTSEMIB", "d": "FTSE MIB (Italy)"},
+            {"s": "INDEX:AEX", "d": "AEX (Netherlands)"},
+            {"s": "INDEX:SMI", "d": "SMI (Switzerland)"},
+            /* Middle East / Africa */
+            {"s": "TADAWUL:TASI", "d": "TASI (Saudi Arabia)"},
+            {"s": "DFM:DFMGI", "d": "DFMGI (Dubai)"},
+            {"s": "INDEX:JALSH", "d": "JSE (S. Africa)"}
           ]
         }
       ]
-    });
-  }
-  else if (type === 'signals') {
-    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js", {
-      "interval": "1m", "width": "100%", "isTransparent": false, "height": "100%", "symbol": "BINANCE:BTCUSDT", "showIntervalTabs": true, "displayMode": "single", "locale": "en", "colorTheme": "dark"
     });
   }
   else if (type === 'charts') {
     container.innerHTML = '<div id="tv_chart" style="height:100%;"></div>';
     new TradingView.widget({"autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "1D", "theme": "dark", "container_id": "tv_chart", "allow_symbol_change": true});
   }
+  else if (type === 'events') {
+    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-events.js", {"width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"});
+  }
   else if (type === 'heatmap') {
-    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js", {"width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"});
+    container.innerHTML = "";
+    const navDiv = document.createElement('div'); navDiv.className = "map-tabs";
+    navDiv.innerHTML = `<button id="m1" class="active-sub" onclick="runHeatmap('crypto', 'm1')">Crypto</button>
+                        <button id="m3" onclick="runHeatmap('us', 'm3')">US Stocks</button>`;
+    container.appendChild(navDiv);
+    const mapDisplay = document.createElement('div'); mapDisplay.id = "map-render"; mapDisplay.style.height = "100%"; container.appendChild(mapDisplay);
+    runHeatmap('crypto', 'm1');
   }
 }
 
-window.onload = () => {
-  loadTicker();
-  loadWidget('crypto', document.querySelector('#bottom-nav button'));
-};
+function runHeatmap(market, btnId) {
+  const display = document.getElementById('map-render');
+  display.innerHTML = ""; 
+  document.querySelectorAll('.map-tabs button').forEach(b => b.classList.remove('active-sub'));
+  document.getElementById(btnId).classList.add('active-sub');
+
+  let scriptUrl, config;
+  if (market === 'crypto') {
+    scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js";
+    config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en" };
+  } else {
+    scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
+    config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en", "dataSource": "SPX500", "grouping": "sector" };
+  }
+  const script = document.createElement('script');
+  script.src = scriptUrl + "?v=" + new Date().getTime();
+  script.async = true; script.innerHTML = JSON.stringify(config);
+  display.appendChild(script);
+}
+
+window.onload = () => loadWidget('crypto', document.querySelector('#bottom-nav button'));
 </script>
 </body>
 </html>
