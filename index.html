@@ -3,33 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Growth Trade Terminal v17 - Paper Trading</title>
+<title>Growth Trade Terminal v12</title>
 <style>
-  :root { --neon: #00ff88; --nav-h: 70px; --card-bg: #111; }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; width: 100%; background: #000; color: white; overflow: hidden; font-family: sans-serif; }
+  :root { --neon: #00ff88; --nav-h: 70px; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { 
+    height: 100%; width: 100%; background: #000; color: white; 
+    overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    overscroll-behavior-y: contain;
+  }
   .app-shell { display: flex; flex-direction: column; height: 100dvh; }
   header { height: 50px; display: flex; align-items: center; justify-content: center; border-bottom: 2px solid var(--neon); background: #000; z-index: 100; }
-  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
-  main { flex: 1; position: relative; overflow-y: auto; background: #000; }
-  
-  /* Navigation */
-  nav { height: var(--nav-h); background: #000; display: flex; border-top: 1px solid #333; padding-bottom: env(safe-area-inset-bottom, 15px); }
-  nav button { flex: 1; background: none; border: none; color: #666; font-size: 9px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-  nav button.active { color: var(--neon); border-top: 3px solid var(--neon); }
-
-  /* Paper Trading UI */
-  #paper-trade-ui { padding: 20px; text-align: center; }
-  .balance-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid #333; margin-bottom: 20px; }
-  .balance-card h2 { color: var(--neon); font-size: 28px; margin-top: 5px; }
-  .trade-form { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid #333; display: flex; flex-direction: column; gap: 10px; }
-  input { background: #222; border: 1px solid #444; color: white; padding: 12px; border-radius: 8px; outline: none; }
-  .btn-buy { background: var(--neon); color: black; font-weight: bold; padding: 12px; border-radius: 8px; border: none; cursor: pointer; }
-  .portfolio-table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 12px; }
-  .portfolio-table th { border-bottom: 1px solid #333; padding: 10px; color: #777; }
-  .portfolio-table td { padding: 12px; border-bottom: 1px solid #222; }
-  .profit { color: var(--neon); }
-  .loss { color: #ff4d4d; }
+  header h1 { font-size: 18px; color: var(--neon); text-shadow: 0 0 10px var(--neon); letter-spacing: 1px; }
+  main { flex: 1; position: relative; overflow: hidden; background: #000; }
+  nav { height: var(--nav-h); background: #000; display: flex; border-top: 1px solid #333; padding-bottom: env(safe-area-inset-bottom, 15px); overflow-x: auto; }
+  nav button { flex: 1; min-width: 70px; background: none; border: none; color: #666; font-size: 9px; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: 0.2s; }
+  nav button.active { color: var(--neon); border-top: 3px solid var(--neon); background: linear-gradient(to top, rgba(0, 255, 136, 0.1), transparent); }
+  #content-area { animation: fadeIn 0.3s ease; height: 100%; width: 100%; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .map-tabs { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; background: rgba(0,0,0,0.95); padding: 5px; border-radius: 30px; border: 1px solid #444; z-index: 2000; }
+  .map-tabs button { background: #222; border: none; color: #aaa; padding: 6px 12px; border-radius: 20px; font-size: 10px; }
+  .map-tabs button.active-sub { background: var(--neon); color: #000; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -37,122 +31,99 @@
 <div class="app-shell">
   <header><h1>📈 GROWTH TRADE</h1></header>
   <main id="view-port"><div id="content-area"></div></main>
-  
   <nav id="bottom-nav">
     <button class="active" onclick="loadWidget('crypto', this)">Crypto</button>
     <button onclick="loadWidget('india_stocks', this)">India</button>
-    <button onclick="loadWidget('paper_trade', this)">Paper Trade</button>
+    <button onclick="loadWidget('market_stats', this)">Indices</button>
     <button onclick="loadWidget('charts', this)">Charts</button>
+    <button onclick="loadWidget('events', this)">Events</button>
     <button onclick="loadWidget('heatmap', this)">Map</button>
   </nav>
 </div>
 
 <script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-// LOCAL STORAGE FOR PERSISTENT TRADING
-let balance = parseFloat(localStorage.getItem('pt_balance')) || 100000.00;
-let portfolio = JSON.parse(localStorage.getItem('pt_portfolio')) || [];
-
-function loadWidget(type, btn) {
-  const container = document.getElementById('content-area');
-  document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  container.innerHTML = "";
-
-  if (type === 'paper_trade') {
-    renderPaperTrade();
-  } else if (type === 'crypto') {
-    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {"width": "100%", "height": "100%", "screener_type": "crypto_mkt", "colorTheme": "dark", "locale": "en"});
-  } else if (type === 'india_stocks') {
-    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {"width": "100%", "height": "100%", "screener_type": "stock", "market": "india", "colorTheme": "dark", "locale": "en"});
-  } else if (type === 'charts') {
-    container.innerHTML = '<div id="tv_chart" style="height:100%;"></div>';
-    new TradingView.widget({"autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "1D", "theme": "dark", "container_id": "tv_chart", "allow_symbol_change": true});
-  } else if (type === 'heatmap') {
-    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js", {"width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"});
-  }
-}
-
-function renderPaperTrade() {
-  const container = document.getElementById('content-area');
-  container.innerHTML = `
-    <div id="paper-trade-ui">
-      <div class="balance-card">
-        <p style="color: #888; font-size: 12px; text-transform: uppercase;">Available Virtual Cash</p>
-        <h2 id="balance-display">$${balance.toLocaleString()}</h2>
-      </div>
-
-      <div class="trade-form">
-        <input type="text" id="symbol-input" placeholder="Symbol (e.g. BTCUSDT, RELIANCE)">
-        <input type="number" id="qty-input" placeholder="Quantity">
-        <button class="btn-buy" onclick="executeTrade()">EXECUTE BUY ORDER</button>
-      </div>
-
-      <table class="portfolio-table">
-        <thead>
-          <tr><th>Symbol</th><th>Qty</th><th>Avg. Price</th><th>Action</th></tr>
-        </thead>
-        <tbody id="portfolio-body"></tbody>
-      </table>
-    </div>
-  `;
-  updatePortfolioUI();
-}
-
-async function executeTrade() {
-  const symbol = document.getElementById('symbol-input').value.toUpperCase();
-  const qty = parseInt(document.getElementById('qty-input').value);
-
-  if(!symbol || !qty || qty <= 0) return alert("Enter valid details");
-
-  // Mock Price Fetch (In real world, you'd use a real API like Binance/Finnhub)
-  // For demo, we are using a random price near 50,000 for BTC style
-  const mockPrice = (Math.random() * 1000 + 2500).toFixed(2); 
-  const totalCost = mockPrice * qty;
-
-  if (totalCost > balance) return alert("Insufficient Balance!");
-
-  balance -= totalCost;
-  portfolio.push({ symbol, qty, price: mockPrice });
-
-  localStorage.setItem('pt_balance', balance);
-  localStorage.setItem('pt_portfolio', JSON.stringify(portfolio));
-  
-  renderPaperTrade();
-  alert(`Bought ${qty} ${symbol} at $${mockPrice}`);
-}
-
-function updatePortfolioUI() {
-  const body = document.getElementById('portfolio-body');
-  body.innerHTML = portfolio.map((item, index) => `
-    <tr>
-      <td>${item.symbol}</td>
-      <td>${item.qty}</td>
-      <td>$${item.price}</td>
-      <td><button onclick="sellStock(${index})" style="background:none; color:#ff4d4d; border:none; cursor:pointer;">SELL</button></td>
-    </tr>
-  `).join('');
-}
-
-function sellStock(index) {
-  const item = portfolio[index];
-  const sellPrice = (item.price * (1 + (Math.random() * 0.1 - 0.05))).toFixed(2); // Mock sell price
-  balance += (sellPrice * item.qty);
-  portfolio.splice(index, 1);
-
-  localStorage.setItem('pt_balance', balance);
-  localStorage.setItem('pt_portfolio', JSON.stringify(portfolio));
-  renderPaperTrade();
-}
+const container = document.getElementById('content-area');
 
 function renderScript(src, config) {
-  const container = document.getElementById('content-area');
   container.innerHTML = ""; 
   const script = document.createElement('script');
   script.src = src;
   script.async = true;
+  script.type = "text/javascript";
   script.innerHTML = JSON.stringify(config);
   container.appendChild(script);
+}
+
+function loadWidget(type, btn) {
+  document.querySelectorAll('#bottom-nav button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  if (type === 'crypto') {
+    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {"width": "100%", "height": "100%", "screener_type": "crypto_mkt", "colorTheme": "dark", "locale": "en"});
+  } 
+  else if (type === 'india_stocks') {
+    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-screener.js", {"width": "100%", "height": "100%", "screener_type": "stock", "market": "india", "colorTheme": "dark", "locale": "en"});
+  }
+  else if (type === 'market_stats') {
+    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js", {
+      "colorTheme": "dark", "showChart": true, "locale": "en", "width": "100%", "height": "100%", "showSymbolLogo": true, "tabs": [
+        { "title": "Global Live Indices", "symbols": [
+            /* Asia & Pacific */
+            {"s": "BSE:SENSEX", "d": "Sensex (India)"},
+            {"s": "INDEX:HSI", "d": "Hang Seng (HK)"},
+            {"s": "INDEX:STI", "d": "Straits Times (SG)"},
+            /* Americas */
+            {"s": "FOREXCOM:SPX500", "d": "S&P 500 (US)"}, 
+            {"s": "FOREXCOM:NSXUSD", "d": "Nasdaq 100 (US)"}, 
+            {"s": "FOREXCOM:DJI", "d": "Dow Jones (US)"},
+            {"s": "TSX:TSX", "d": "TSX (Canada)"},
+            /* Europe */
+            {"s": "INDEX:DAX", "d": "DAX 40 (Germany)"},  
+            {"s": "INDEX:CAC40", "d": "CAC 40 (France)"},
+            {"s": "INDEX:FTSEMIB", "d": "FTSE MIB (Italy)"},
+            {"s": "INDEX:SMI", "d": "SMI (Switzerland)"},
+          ]
+        }
+      ]
+    });
+  }
+  else if (type === 'charts') {
+    container.innerHTML = '<div id="tv_chart" style="height:100%;"></div>';
+    new TradingView.widget({"autosize": true, "symbol": "BINANCE:BTCUSDT", "interval": "1D", "theme": "dark", "container_id": "tv_chart", "allow_symbol_change": true});
+  }
+  else if (type === 'events') {
+    renderScript("https://s3.tradingview.com/external-embedding/embed-widget-events.js", {"width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en"});
+  }
+  else if (type === 'heatmap') {
+    container.innerHTML = "";
+    const navDiv = document.createElement('div'); navDiv.className = "map-tabs";
+    navDiv.innerHTML = `<button id="m1" class="active-sub" onclick="runHeatmap('crypto', 'm1')">Crypto</button>
+                        <button id="m3" onclick="runHeatmap('us', 'm3')">US Stocks</button>`;
+    container.appendChild(navDiv);
+    const mapDisplay = document.createElement('div'); mapDisplay.id = "map-render"; mapDisplay.style.height = "100%"; container.appendChild(mapDisplay);
+    runHeatmap('crypto', 'm1');
+  }
+}
+
+function runHeatmap(market, btnId) {
+  const display = document.getElementById('map-render');
+  display.innerHTML = ""; 
+  document.querySelectorAll('.map-tabs button').forEach(b => b.classList.remove('active-sub'));
+  document.getElementById(btnId).classList.add('active-sub');
+
+  let scriptUrl, config;
+  if (market === 'crypto') {
+    scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-crypto-coins-heatmap.js";
+    config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en" };
+  } else {
+    scriptUrl = "https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js";
+    config = { "width": "100%", "height": "100%", "colorTheme": "dark", "locale": "en", "dataSource": "SPX500", "grouping": "sector" };
+  }
+  const script = document.createElement('script');
+  script.src = scriptUrl + "?v=" + new Date().getTime();
+  script.async = true; script.innerHTML = JSON.stringify(config);
+  display.appendChild(script);
 }
 
 window.onload = () => loadWidget('crypto', document.querySelector('#bottom-nav button'));
